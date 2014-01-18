@@ -12,5 +12,10 @@ CHIP Not {
     OUT out;
 
     PARTS:
-    // Put your code here:
+
+    /* yatta! notice semicolon end, and inputs outputs are params to the function call */
+    /* of the invoked chip. Nand operator is primitive. */ 
+
+    Nand(a=in, b=true, out=out);
+
 }
