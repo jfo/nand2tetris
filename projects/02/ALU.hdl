@@ -61,8 +61,4 @@ CHIP ALU {
         Not16(in=computed, out=negcomputed);
         Mux16(a=computed, b=negcomputed, sel=no, out[15]=ng1, out[15]=ng, out=out, out=final);
 
-        /* this shit doesn't work yet, copped from some codepen... */
-        /* Add16(a=final, b=true, out=out3, out[15]=out315); */
-        /* Not(in=ng1, out=ngcomp); */
-        /* And(a=ngcomp, b=out315, out=zr); */
 }
