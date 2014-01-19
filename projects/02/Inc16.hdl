@@ -13,4 +13,24 @@ CHIP Inc16 {
 
     PARTS:
    // Put you code here:
+
+  HalfAdder(a=in[0], b=true, sum=out[0], carry=one);
+  HalfAdder(a=in[1], b=one, sum=out[1], carry=two);
+  HalfAdder(a=in[2], b=two, sum=out[2], carry=three);
+  HalfAdder(a=in[3], b=three, sum=out[3], carry=four);
+  HalfAdder(a=in[4], b=four, sum=out[4], carry=five);
+  HalfAdder(a=in[5], b=five, sum=out[5], carry=six);
+  HalfAdder(a=in[6], b=six, sum=out[6], carry=seven);
+  HalfAdder(a=in[7], b=seven, sum=out[7], carry=eight);
+  HalfAdder(a=in[8], b=eight, sum=out[8], carry=nine);
+  HalfAdder(a=in[9], b=nine, sum=out[9], carry=ten);
+  HalfAdder(a=in[10], b=ten, sum=out[10], carry=eleven);
+  HalfAdder(a=in[11], b=eleven, sum=out[11], carry=twelve);
+  HalfAdder(a=in[12], b=twelve, sum=out[12], carry=thirteen);
+  HalfAdder(a=in[13], b=thirteen, sum=out[13], carry=fourteen);
+  HalfAdder(a=in[14], b=fourteen, sum=out[14], carry=fifteen);
+  HalfAdder(a=in[15], b=fifteen, sum=out[15], carry=derp);
+
+  /* could this be done using a full adder? */
+
 }
