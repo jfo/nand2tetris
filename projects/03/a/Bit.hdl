@@ -14,5 +14,11 @@ CHIP Bit {
     OUT out;
 
     PARTS:
-    // Put your code here:
+
+
+    Mux(a=lastcyclevalue, b=in, sel=load, out=derp);
+    DFF(in=derp, out=lastcyclevalue, out=out);
+
+
 }
+

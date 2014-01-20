@@ -16,7 +16,21 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+
+    /* if reset is true, load must also be true */
+    /* but if load is true, reset needn't be true */
+    /* HOLY SHIT THAT WAS A HARD ONE */
+
+    Mux(a=load, b=false, sel=reset, out=loaded);
+
+    Mux16(a=fromall, b=in, sel=loaded, out=fromloadmux);
+    Register(in=fromloadmux, load=true, out=toall, out=out);
+
+    Inc16(in=toall, out=frominc);
+    Mux16(a=toall, b=frominc, sel=inc, out=fromincrementer);
+
+    Mux16(a=fromincrementer, b=false, sel=reset, out=fromall);
+
 }
 
 
