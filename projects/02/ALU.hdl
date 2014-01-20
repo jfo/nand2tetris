@@ -47,18 +47,61 @@ CHIP ALU {
     PARTS:
 
         Mux16(a=x, b=false, sel=zx, out=xthru);
+
+        Not16(in=xthru, out=xneg);
+        Mux16(a=xthru, b=xneg, sel=nx, out=xthrutwo);
+
         Mux16(a=y, b=false, sel=zy, out=ythru);
 
-        Not16(in=x, out=xneg);
-        Not16(in=y, out=yneg);
-        Mux16(a=xthru, b=xneg, sel=nx, out=xthrutwo);
+        Not16(in=ythru, out=yneg);
         Mux16(a=ythru, b=yneg, sel=ny, out=ythrutwo);
+
 
         Add16(a=xthrutwo, b=ythrutwo, out=xy);
         And16(a=xthrutwo, b=ythrutwo, out=xandy);
-        Mux16(a=xy, b=xandy, sel=f, out=computed);
+        Mux16(a=xandy, b=xy, sel=f, out=computed);
 
         Not16(in=computed, out=negcomputed);
-        Mux16(a=computed, b=negcomputed, sel=no, out[15]=ng1, out[15]=ng, out=out, out=final);
+        Mux16(a=computed, b=negcomputed, sel=no, out[15]=ng, out=out,
 
+        /* the following is wicked gross, and there must be a better way. */ 
+            out[0]=o0,
+            out[1]=o1,
+            out[2]=o2,
+            out[3]=o3,
+            out[4]=o4,
+            out[5]=o5,
+            out[6]=o6,
+            out[7]=o7,
+            out[8]=o8,
+            out[9]=o9,
+            out[10]=o10,
+            out[11]=o11,
+            out[12]=o12,
+            out[13]=o13,
+            out[14]=o14,
+            out[15]=o15);
+
+        Or(a=o0, b=false, out=or0);
+        Or(a=o1, b=or0, out=or1);
+        Or(a=o2, b=or1, out=or2);
+        Or(a=o3, b=or2, out=or3);
+
+        Or(a=o4, b=or3, out=or4);
+        Or(a=o5, b=or4, out=or5);
+        Or(a=o6, b=or5, out=or6);
+        Or(a=o7, b=or6, out=or7);
+
+        Or(a=o8, b=or7, out=or8);
+        Or(a=o9, b=or8, out=or9);
+        Or(a=o10, b=or9, out=or10);
+        Or(a=o11, b=or10, out=or11);
+
+        Or(a=o12, b=or11, out=or12);
+        Or(a=o13, b=or12, out=or13);
+        Or(a=o14, b=or13, out=or14);
+        Or(a=o15, b=or14, out=zrneg);
+
+        Not(in=zrneg, out=zr);
+        /* but it totally works! */
 }
