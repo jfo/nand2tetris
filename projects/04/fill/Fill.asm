@@ -16,15 +16,17 @@ M=M+1
 @8
 M=M-1
 M, JGT
-@18
-1, JEQ
+@KBD
+D=M
+@0
+D, JNE
 @SCREEN
 D=A
 @address
 M=D
 @8192
 D=A
-@28
+@30
 M=D
 @0
 D=A
@@ -33,12 +35,12 @@ A=M
 M=D
 @address
 M=M+1
-@28
+@30
 M=M-1
 M, JGT
 @KBD
 D=M
 @0
 D, JNE
-@22
+@24
 0, JMP
