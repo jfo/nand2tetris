@@ -29,8 +29,11 @@ CHIP Memory {
 
     PARTS:
 
-    RAM16K(in=in, load=load, address=address[1..14], out=tomux);
-    /* Screen(in=tosc , load=load , address=address[0..14] ,out=tomux ); */
+    RAM16K(in=in, load=load, address=address[1..14], out=tomux1a);
+    Screen(in=in , load=address[0] , address=address[2..14] ,out=tomux1b );
     Keyboard(out=fromkey);
-    Mux16(a=tomux, b=fromkey, sel=address[0], out=out);
+    Mux16(a=tomux1a, b=tomux1b, sel=address[0], out=out);
+
+    /* Mux16(a=tomux1a, b=tomux1b, sel=address[0], out=tomux); */
+
 }
