@@ -32,15 +32,18 @@ CHIP Memory {
     Keyboard(out=fromkey);
 
     Or16Way(in=fromkey, out=input);
+    And(a=address[0], b=true, out=screen);
 
     Mux16(a=in, b=fromkey, sel=input, out=toram, out=hey);
 
     RAM16K(in=toram, load=load, address=address[1..14], out=tomux1a);
 
-    Screen(in=in , load=address[0] , address=address[2..14] ,out=tomux1b );
+    Screen(in=in , load=address[0] , address=address[2..14] ,out=tomux1b, out=fromscreen );
 
     Mux16(a=tomux1a, b=tomux1b, sel=address[0], out=huh);
 
-    Mux16(a=huh, b=hey, sel=input, out=out);
+    Mux16(a=huh, b=hey, sel=input, out=tomux2);
+
+    Mux16(a=tomux2, b=fromscreen, sel=screen, out=out);
 
 }
