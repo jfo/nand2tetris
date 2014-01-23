@@ -40,34 +40,24 @@ CHIP CPU {
 
     PARTS:
 
-    Not(in=instruction[15], out=loadaq);
-    And(a=instruction[15], b=instruction[12], out=M);
-    And(a=instruction[15], b=instruction[13], out=D);
 
-    /* And(a=instruction[15], b=instruction, out=); */
-    /* And(a=instruction[15], b=instruction, out=); */
-    /* And(a=instruction[15], b=instruction, out=); */
-    /* And(a=instruction[15], b=instruction, out=); */
-    /* And(a=instruction[15], b=instruction, out=); */
+    Mux16(a=instruction, b=ALUoutput, sel=instruction[12], out=toareg);
+    ARegister(in=toareg, load=instruction[3], out=fromareg, out[1..15]=addressM);// a register
+    Mux16(a=fromareg, b=inM, sel=instruction[13], out=AMalu);
 
+    ALU(x=AMalu, y=fromdreg,
+                 nx=instruction[11],
+                 nx=instruction[10],
+                 zy=instruction[9],
+                 ny=instruction[8],
+                 f=instruction[7],
+                 no=instruction[6],
+        zr=zr, ng=ng, out=outM, out=ALUoutput);
 
-    Mux16(a=instruction, b=ALUoutput, sel=M, out=toAreg);
-    ARegister(in=toAreg, load=loadaq, out=froma);
+    DRegister(in=ALUoutput, load=instruction[4] ,out=fromdreg); // d register
+    PC(in=fromareg, reset=reset, load=reset, inc=true, out[1..15]=pc);
 
-    Mux16(a=froma, b=inM, sel=M, out=fromAM);
-
-    ALU(x=fromAM, y=fromD,
-                 nx=true,
-                 nx=true,
-                 zy=true,
-                 ny=true,
-                 f=true,
-                 no=true,
-        zr=true, ng=true, out=ALUoutput );
-
-    DRegister(in=ALUoutput, load=D ,out=fromD);
-    PC(in=, reset=reset, load=false, inc=true, out=pc);
-
+    And(a=instruction[5], b=true, out=writeM);
 
 
 }
