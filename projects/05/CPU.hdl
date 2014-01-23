@@ -40,10 +40,6 @@ CHIP CPU {
 
     PARTS:
 
-    //DECODE
-
-    //
-
 
     And(a=instruction[15], b=true, out=cinstruction);
     Not(in=cinstruction, out=ainstruction);
@@ -62,7 +58,7 @@ CHIP CPU {
                  ny=ny,
                  f=f,
                  no=no,
-        zr=zr, ng=ng, out=ALUout, out=outM );
+        zr=zr, ng=ng, out=ALUout, out=outM, out[15]=negq );
 
     DRegister(in=ALUout, load=writeD ,out=fromd);
 
@@ -81,11 +77,24 @@ CHIP CPU {
     And(a=instruction[4], b=cinstruction, out=writeD);
     And(a=instruction[3], b=cinstruction, out=writeM);
 
-    And(a=instruction[2], b=cinstruction, out=jmp1);
-    And(a=instruction[1], b=cinstruction, out=jmp2);
-    And(a=instruction[0], b=cinstruction, out=jmp3);
+    And(a=instruction[2], b=cinstruction, out=JLT);
+    And(a=instruction[1], b=cinstruction, out=JEQ);
+    And(a=instruction[0], b=cinstruction, out=JGT);
 
-    Or(a=jmp1, b=jmp2, out=jmp4);
-    Or(a=jmp4, b=jmp3, out=pcload);
-  
+
+    And(a=negq, b=true, out=lessthanzero);
+
+    Or16Way(in=ALUout, out=exists);
+    Not(in=negq, out=notneg);
+    And(a=exists, b=notneg, out=greaterthanzero);
+
+    Not(in=exists, out=doesntexist);
+    And(a=doesntexist, b=true, out=equaltozero);
+
+    And(a=JGT, b=greaterthanzero, out=jmpJGT);
+    And(a=JEQ, b=equaltozero, out=jmpJEQ);
+    And(a=JLT, b=lessthanzero, out=jmpJLT);
+
+    Or(a=jmpJGT, b=jmpJEQ, out=midjump);
+    Or(a=midjump, b=jmpJLT, out=pcload);
 }
