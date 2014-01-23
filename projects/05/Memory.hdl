@@ -26,6 +26,11 @@ CHIP Memory {
     IN in[16], load, address[15];
     OUT out[16];
 
+
     PARTS:
-    // Put your code here:
+
+    RAM16K(in=in, load=load, address=address[1..14], out=tomux);
+    /* Screen(in=tosc , load=load , address=address[0..14] ,out=tomux ); */
+    Keyboard(out=fromkey);
+    Mux16(a=tomux, b=fromkey, sel=address[0], out=out);
 }
