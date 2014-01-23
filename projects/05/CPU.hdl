@@ -40,34 +40,52 @@ CHIP CPU {
 
     PARTS:
 
-    Not(in=instruction[15], out=loadaq);
-    And(a=instruction[15], b=instruction[12], out=M);
-    And(a=instruction[15], b=instruction[13], out=D);
+    //DECODE
 
-    /* And(a=instruction[15], b=instruction, out=); */
-    /* And(a=instruction[15], b=instruction, out=); */
-    /* And(a=instruction[15], b=instruction, out=); */
-    /* And(a=instruction[15], b=instruction, out=); */
-    /* And(a=instruction[15], b=instruction, out=); */
+    //
 
 
-    Mux16(a=instruction, b=ALUoutput, sel=M, out=toAreg);
-    ARegister(in=toAreg, load=loadaq, out=froma);
+    And(a=instruction[15], b=true, out=cinstruction);
+    Not(in=cinstruction, out=ainstruction);
+    Or(a=ainstruction, b=writeA, out=loadA);
 
-    Mux16(a=froma, b=inM, sel=M, out=fromAM);
+    Or(a=AMswitch, b=cinstruction, out=asource);
+    Mux16(a=instruction, b=ALUout, sel=asource, out=toa);
+    ARegister(in=toa, load=loadA, out=froma, out[0..14]=topc, out[0..14]=addressM);
 
-    ALU(x=fromAM, y=fromD,
-                 nx=true,
-                 nx=true,
-                 zy=true,
-                 ny=true,
-                 f=true,
-                 no=true,
-        zr=true, ng=true, out=ALUoutput );
+    Mux16(a=froma, b=inM, sel=AMswitch, out=fromam);
 
-    DRegister(in=ALUoutput, load=D ,out=fromD);
-    PC(in=, reset=reset, load=false, inc=true, out=pc);
+    ALU(x=fromd, y=fromam,
+                 zx=zx,
+                 nx=nx,
+                 zy=zy,
+                 ny=ny,
+                 f=f,
+                 no=no,
+        zr=zr, ng=ng, out=ALUout, out=outM );
 
+    DRegister(in=ALUout, load=writeD ,out=fromd);
 
+    PC(in=froma, reset=reset, load=pcload, inc=true, out[0..14]=pc);
 
+    And(a=instruction[12], b=cinstruction, out=AMswitch);
+
+    And(a=instruction[11], b=cinstruction, out=zx);
+    And(a=instruction[10], b=cinstruction, out=nx);
+    And(a=instruction[9], b=cinstruction, out=zy);
+    And(a=instruction[8], b=cinstruction, out=ny);
+    And(a=instruction[7], b=cinstruction, out=f);
+    And(a=instruction[6], b=cinstruction, out=no);
+
+    And(a=instruction[5], b=cinstruction, out=writeA);
+    And(a=instruction[4], b=cinstruction, out=writeD);
+    And(a=instruction[3], b=cinstruction, out=writeM);
+
+    And(a=instruction[2], b=cinstruction, out=jmp1);
+    And(a=instruction[1], b=cinstruction, out=jmp2);
+    And(a=instruction[0], b=cinstruction, out=jmp3);
+
+    Or(a=jmp1, b=jmp2, out=jmp4);
+    Or(a=jmp4, b=jmp3, out=pcload);
+  
 }
