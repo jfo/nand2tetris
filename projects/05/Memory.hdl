@@ -31,13 +31,20 @@ CHIP Memory {
 
    /* wow, that was an awful one... it turns out the most significant bit gets the highest offest number? I am so confused about that. Still need to fix keyboard input placement in the chain... */
 
+    And(a=load, b=address[14], out=loadsc);
+    Not(in=address[14], out=notscreen);
+    And(a=load, b=notscreen, out=loadm);
+
     DMux16(in=in, sel=address[14], a=toram, b=toscreen);
 
-    Keyboard(out=fromkey, out=hasinput);
-    Or16Way(in=hasinput, out=input);
+    Keyboard(out=fromkey, out[0..7]=hasinput1, out[8..15]=hasinput2);
 
-    RAM16K(in=toram, load=load, address=address[0..13], out=tomux1a);
-    Screen(in=toscreen , load=load, address=address[0..12], out=tomux1b);
+    Or8Way(in=hasinput1, out=out1);
+    Or8Way(in=hasinput2, out=out2);
+    Or(a=out1, b=out2, out=input);
+
+    RAM16K(in=toram, load=loadm, address=address[0..13], out=tomux1a);
+    Screen(in=toscreen , load=loadsc, address=address[0..12], out=tomux1b);
 
     Mux16(a=tomux1a, b=tomux1b, sel=address[14], out=frommain);
     Mux16(a=frommain, b=fromkey, sel=input, out=out);

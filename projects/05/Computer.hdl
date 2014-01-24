@@ -24,7 +24,7 @@ CHIP Computer {
 
     Memory( in=toM,
             load=writeM,
-            address=addressM,
+            address=addressm,
             out=inM);
 
     CPU(    inM=inM,
@@ -32,7 +32,7 @@ CHIP Computer {
             reset=reset,
             outM=toM,
             writeM=writeM,
-            addressM=addressM,
+            addressM=addressm,
             pc=romaddy);
 
     ROM32K(  address=romaddy,

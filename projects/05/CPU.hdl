@@ -25,8 +25,7 @@
  * than to the address resulting from executing the current instruction.
  */
 
-CHIP CPU {
-
+CHIP CPU{
     IN  inM[16],         // M value input  (M = contents of RAM[A])
         instruction[16], // Instruction for execution
         reset;           // Signals whether to re-start the current
