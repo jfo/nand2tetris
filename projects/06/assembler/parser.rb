@@ -1,9 +1,11 @@
 
+require_relative 'code'
 
 require 'pry'
 
-
 class Parser
+
+  include Code
 
   attr_reader :asm, :commands, :command
 
@@ -27,6 +29,8 @@ class Parser
     if @command != nil
       if @command.slice(0) == '@'
         'A_COMMAND'
+      elsif @command.slice(0) == '('
+        'L_COMMAND'
       else
         'C_COMMAND'
       end
@@ -53,7 +57,7 @@ class Parser
     #should be called only when commandtype is C
 
     if command_type == 'C_COMMAND'
-      @command.match(/[^\=]+$/).to_s
+      @command.match(/(.)(;)|(=)(.)/).to_s.gsub!(/\W+/, '')
     else
       raise ArgumentError, 'Current command is not a C_COMMAND'
     end
@@ -63,6 +67,12 @@ class Parser
   def jump
     # returns the jump mnemonic in the current c command, 8 possibilities
     # should be called only when the command type is c
+
+    if command_type == 'C_COMMAND'
+      @command.match(/(;)(.+)/).to_s.gsub!(/\W+/, '')
+    else
+      raise ArgumentError, 'Current command is not a C_COMMAND'
+    end
   end
 
   private
