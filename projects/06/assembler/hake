@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+require_relative 'parser'
+raise 'No file specified' if ARGV.length != 1
+
+name = ARGV[0].sub(/.asm/, '') + '.hack'
+
+
+output = File.open(name, 'w')
+output.puts(Parser.new(ARGV[0]).export_compiled)
+output.close
+

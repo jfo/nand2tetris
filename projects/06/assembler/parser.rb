@@ -1,19 +1,18 @@
-
 require_relative 'code'
-
 require 'pry'
 
 class Parser
-
   include Code
 
-  attr_reader :asm, :commands, :command
+  attr_reader :asm, :commands, :command, :compiled
 
-  def initialize
+  def initialize(asmfilepath)
     #opens the input file or stream and prepares to parse it
-    @asm = File.open(ARGV[0]).read
+    @asm = File.open(asmfilepath).read
     strip_comments
     @commands = @asm.split.reverse
+    @compiled = []
+
   end
 
   def has_more_commands?
@@ -21,15 +20,19 @@ class Parser
   end
 
   def advance
-    @command = @commands.pop if has_more_commands?
+    if has_more_commands?
+      @command = @commands.pop
+    else
+      @command = nil
+    end
   end
 
   def command_type
     # returns the type of the current command
     if @command != nil
-      if @command.slice(0) == '@'
+      if @command[0] == '@'
         'A_COMMAND'
-      elsif @command.slice(0) == '('
+      elsif @command[0] == '('
         'L_COMMAND'
       else
         'C_COMMAND'
@@ -42,47 +45,80 @@ class Parser
     # should be called only when commandType() is A_COMMAND or L_COMMAND
   end
 
+
+  def decode_c
+  end
+
   def dest
     #returns the dest mnemonic in the current c-command (8 poss)
     #should be called only when C command is C_command
-    if command_type == 'C_COMMAND'
-      @command.match(/^[^\=]*/).to_s
+    if command_type =='C_COMMAND' && @command.include?('=')
+      @command.match(/^\S+=/).to_s.delete('=')
     else
-      raise ArgumentError, 'Current command is not a C_COMMAND'
+      nil
     end
   end
 
   def comp
     #returns the comp mnemonic in the current c command (28 possibilities)
     #should be called only when commandtype is C
-
+    #
+    test_command = @command
     if command_type == 'C_COMMAND'
-      @command.match(/(.)(;)|(=)(.)/).to_s.gsub!(/\W+/, '')
-    else
-      raise ArgumentError, 'Current command is not a C_COMMAND'
+      test_command = @command.sub(/^\S+=/, '') if test_command.include?('=')
+      test_command = @command.sub(/;\S+$/, '') if test_command.include?(';')
+      test_command.to_s
     end
-
   end
 
   def jump
-    # returns the jump mnemonic in the current c command, 8 possibilities
-    # should be called only when the command type is c
-
-    if command_type == 'C_COMMAND'
-      @command.match(/(;)(.+)/).to_s.gsub!(/\W+/, '')
+    test_command = @command
+    puts 'derp!'
+    if command_type == 'C_COMMAND' && test_command.include?(';')
+      test_command = @command.sub(/^\S+;/, '')
+      test_command.to_s
     else
-      raise ArgumentError, 'Current command is not a C_COMMAND'
+      nil
     end
+  end
+
+  def compile
+    if command_type == 'A_COMMAND'
+
+      bin = @command.scan(/[0-9]/).join.to_i.to_s(2)
+      bin = bin.reverse.concat('0').reverse until bin.length == 16
+      @compiled << bin
+
+    elsif command_type == 'C_COMMAND'
+      bin = []
+      bin << '111'
+      bin << compile_comp(comp)
+      bin << compile_dest(dest)
+      bin << compile_jump(jump)
+      @compiled << bin.join
+    elsif command_type  =='L_COMMAND'
+      # raise 'havent implemented yet'
+    else
+      # raise 'wrong arguments or something'
+    end
+    advance
+    bin
+  end
+
+  def export_compiled
+    advance
+    compile until @command == nil
+    @compiled.join("\n")
   end
 
   private
 
   def strip_comments
     @asm = @asm.gsub(/\/\/.+$/, "")
+    @asm = @asm.delete("\n")
+    # @asm = @asm.delete("\r")
   end
-
 end
 
-ARGV[0] = '../pong/pong.asm'
-x = Parser.new
-binding.pry
+# x = Parser.new('PongL.asm')
+# binding.pry
