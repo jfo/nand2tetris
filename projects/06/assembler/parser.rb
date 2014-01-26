@@ -43,28 +43,40 @@ class Parser
 
   def build_symbol_table
     i = 0
+    offset = 0
     @commands.reverse_each do |command|
       if command[0] == '('
-        @symbol_table.table[command.delete('(').delete(')')] = i
+        @symbol_table.table[command.delete('(').delete(')')] = (i - offset)
       else
         i += 1
       end
     end
 
-    # @commands.each { |com| @commands.delete(com) if com[0] == '(' }
+    @commands.each { |com| @commands.delete(com) if com[0] == '(' }
 
     var_mem = 16
 
     @commands.reverse_each do |command|
-      var = command.scan(/[^0-9@]/).join.to_s
-      if command[0] == '@' && @symbol_table.table.keys.include?(var) == false && var.length > 0
-        var_mem += 1 if @symbol_table.table.values.include?(var_mem)
-        @symbol_table.table[var] = var_mem
+      var = command.scan(/[^@]/).join.to_s
+      if command[0] == '@' && @symbol_table.table.keys.include?(var) == false && command[1] =~ /[A-Za-z]/
+        # var_mem += 1 if @symbol_table.table.values.include?(var_mem)
+        p @symbol_table.table[var] = var_mem
         var_mem += 1
       end
     end
     @commands.delete_if {|element| element[0] == '(' }
+  end
 
+  def replace_vars
+    @commands.map! do |command|
+      var = command.scan(/[^@]/).join.to_s
+      if command[0] == '@' && @symbol_table.table.keys.include?(var)
+        command = '@' + @symbol_table.table[var].to_s
+      else
+        p command = command
+      end
+    end
+    300.times { puts 'derp' }
   end
 
   def symbol
@@ -96,7 +108,6 @@ class Parser
 
   def jump
     test_command = @command
-    puts 'derp!'
     if command_type == 'C_COMMAND' && test_command.include?(';')
       test_command = @command.sub(/^\S+;/, '')
       test_command.to_s
@@ -106,6 +117,8 @@ class Parser
   end
 
   def compile
+
+
     if command_type == 'A_COMMAND'
 
       bin = @command.scan(/[0-9]/).join.to_i.to_s(2)
@@ -129,6 +142,8 @@ class Parser
   end
 
   def export_compiled
+    build_symbol_table
+    replace_vars
     advance
     compile until @command == nil
     @compiled.join("\n")
@@ -143,5 +158,7 @@ class Parser
   end
 end
 
-x = Parser.new('pong.asm')
+x = Parser.new('Pong.asm')
 binding.pry
+
+
