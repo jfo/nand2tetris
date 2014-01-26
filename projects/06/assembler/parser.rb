@@ -1,10 +1,11 @@
 require_relative 'code'
+require_relative 'symboltable'
 require 'pry'
 
 class Parser
   include Code
 
-  attr_reader :asm, :commands, :command, :compiled
+  attr_reader :asm, :commands, :command, :compiled, :symbol_table
 
   def initialize(asmfilepath)
     #opens the input file or stream and prepares to parse it
@@ -12,7 +13,7 @@ class Parser
     strip_comments
     @commands = @asm.split.reverse
     @compiled = []
-
+    @symbol_table = SymbolTable.new
   end
 
   def has_more_commands?
@@ -40,13 +41,35 @@ class Parser
     end
   end
 
+  def build_symbol_table
+    i = 0
+    @commands.reverse_each do |command|
+      if command[0] == '('
+        @symbol_table.table[command.delete('(').delete(')')] = i
+      else
+        i += 1
+      end
+    end
+
+    # @commands.each { |com| @commands.delete(com) if com[0] == '(' }
+
+    var_mem = 16
+
+    @commands.reverse_each do |command|
+      var = command.scan(/[^0-9@]/).join.to_s
+      if command[0] == '@' && @symbol_table.table.keys.include?(var) == false && var.length > 0
+        var_mem += 1 if @symbol_table.table.values.include?(var_mem)
+        @symbol_table.table[var] = var_mem
+        var_mem += 1
+      end
+    end
+    @commands.delete_if {|element| element[0] == '(' }
+
+  end
+
   def symbol
     # returns the symbol of decimal Xxx of the current command @Xxx or Xxx.
     # should be called only when commandType() is A_COMMAND or L_COMMAND
-  end
-
-
-  def decode_c
   end
 
   def dest
@@ -120,5 +143,5 @@ class Parser
   end
 end
 
-# x = Parser.new('PongL.asm')
-# binding.pry
+x = Parser.new('pong.asm')
+binding.pry
