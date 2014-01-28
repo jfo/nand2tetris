@@ -23,8 +23,15 @@ D=M
 M=M-1
 A=M
 D=D-M
-D=D&A
-M=!D
+M=1
+D=D-1
+(anchor.1)
+@SP
+A=M
+M=M-1
+D=D+1
+@anchor.1
+D;JEQ
 @SP
 M=M+1
 //push constant 17
@@ -52,8 +59,15 @@ D=M
 M=M-1
 A=M
 D=D-M
-D=D&A
-M=!D
+M=1
+D=D-1
+(anchor.2)
+@SP
+A=M
+M=M-1
+D=D+1
+@anchor.2
+D;JEQ
 @SP
 M=M+1
 //push constant 16
@@ -81,8 +95,15 @@ D=M
 M=M-1
 A=M
 D=D-M
-D=D&A
-M=!D
+M=1
+D=D-1
+(anchor.3)
+@SP
+A=M
+M=M-1
+D=D+1
+@anchor.3
+D;JEQ
 @SP
 M=M+1
 //push constant 892

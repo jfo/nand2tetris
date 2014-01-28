@@ -8,6 +8,12 @@ class CodeWriter
   def initialize(output_file)
     # Opens the output file and gets ready to write into it
     @output = File.open('/Users/jeff/code/nand2tetris/projects/07/StackArithmetic/StackTest/' + output_file + '.asm', 'w+')
+    @loop_count = 0
+  end
+
+  def looper
+    @loop_count += 1
+    @loop_count
   end
 
   def set_file_name(file_name)
@@ -16,12 +22,14 @@ class CodeWriter
 
   def write_arithmetic(command)
     # Writes the assembly code that is the translation code of the given arithmetic command
+    #
+    anchor = looper
 
     case command
     when 'add'
       @output << "//add\n@SP\nA=M-1\nD=M\n@SP\nM=M-1\nM=M-1\nA=M\nM=M+D\n@SP\nM=M+1\n"
     when 'eq'
-      @output << "//eq\n@SP\nM=M-1\nA=M\nD=M\n@SP\nM=M-1\nA=M\nD=D-M\nD=D&A\nM=!D\n@SP\nM=M+1\n"
+      @output << "//eq\n@SP\nM=M-1\nA=M\nD=M\n@SP\nM=M-1\nA=M\nD=D-M\nM=1\nD=D-1\n(anchor.#{anchor})\n@SP\nA=M\nM=M-1\nD=D+1\n@anchor.#{anchor}\nD;JEQ\n@SP\nM=M+1\n"
     end
 
   end
