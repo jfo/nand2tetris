@@ -28,8 +28,22 @@ class CodeWriter
     case command
     when 'add'
       @output << "//add\n@SP\nA=M-1\nD=M\n@SP\nM=M-1\nM=M-1\nA=M\nM=M+D\n@SP\nM=M+1\n"
+    when 'sub'
+      @output << "//sub\n@SP\nM=M-1\nA=M\nD=M\n@SP\nM=M-1\nA=M\nM=M-D\n@SP\nM=M+1\n"
     when 'eq'
       @output << "//eq\n@SP\nM=M-1\nA=M\nD=M\n@SP\nM=M-1\nA=M\nD=D-M\nM=1\nD=D-1\n(anchor.#{anchor})\n@SP\nA=M\nM=M-1\nD=D+1\n@anchor.#{anchor}\nD;JEQ\n@SP\nM=M+1\n"
+    when 'lt'
+      @output << "//lt\n@SP\nM=M-1\nA=M\nD=M\n@SP\nM=M-1\nA=M\nD=D-M\nM=1\nD=!D\n(anchor.#{anchor})\n@SP\nA=M\nM=M-1\n@anchor.#{anchor}\nD=!D\nD;JGT\n@SP\nM=M+1\n"
+    when 'gt'
+      @output << "//gt\n@SP\nM=M-1\nA=M\nD=M\n@SP\nM=M-1\nA=M\nD=D-M\nM=1\nD=!D\n(anchor.#{anchor})\n@SP\nA=M\nM=M-1\n@anchor.#{anchor}\nD=!D\nD;JLT\n@SP\nM=M+1\n"
+    when 'and'
+      @output << "//and\n@SP\nM=M-1\nA=M\nD=M\n@SP\nM=M-1\nA=M\nM=M&D\n@SP\nM=M+1\n"
+    when 'or'
+      @output << "//or\n@SP\nM=M-1\nA=M\nD=M\n@SP\nM=M-1\nA=M\nM=M|D\n@SP\nM=M+1\n"
+    when 'not'
+      @output << "//not\n@SP\nM=M-1\nA=M\nM=!M\n@SP\nM=M+1\n"
+    when 'neg'
+      @output << "//neg\n@SP\nM=M-1\nA=M\nM=-M\n@SP\nM=M+1\n"
     end
 
   end
