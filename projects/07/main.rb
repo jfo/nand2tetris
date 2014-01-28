@@ -10,9 +10,11 @@
 require_relative 'parser'
 require_relative 'codewriter'
 
-input = Parser.new
+ARGV << '/Users/jeff/code/nand2tetris/projects/07/StackArithmetic/StackTest/StackTest.vm'
+input = Parser.new(ARGV[0])
 
-output = CodeWriter.new('SimpleAdd')
+
+output = CodeWriter.new('StackTest')
 
 until !input.has_more_commands?
   input.advance

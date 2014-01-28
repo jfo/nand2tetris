@@ -7,7 +7,7 @@ class CodeWriter
 
   def initialize(output_file)
     # Opens the output file and gets ready to write into it
-    @output = File.open(output_file + '.asm', 'w')
+    @output = File.open('/Users/jeff/code/nand2tetris/projects/07/StackArithmetic/StackTest/' + output_file + '.asm', 'w+')
   end
 
   def set_file_name(file_name)
@@ -19,7 +19,9 @@ class CodeWriter
 
     case command
     when 'add'
-      @output << "@SP\nA=M-1\nD=M\n@SP\nM=M-1\nM=M-1\nA=M\nM=M+D\n@SP\nM=M+1\n"
+      @output << "//add\n@SP\nA=M-1\nD=M\n@SP\nM=M-1\nM=M-1\nA=M\nM=M+D\n@SP\nM=M+1\n"
+    when 'eq'
+      @output << "//eq\n@SP\nM=M-1\nA=M\nD=M\n@SP\nM=M-1\nA=M\nD=D-M\nD=D&A\nM=!D\n@SP\nM=M+1\n"
     end
 
   end
@@ -43,7 +45,7 @@ class CodeWriter
 
     if command == 'C_PUSH'
       if segment == 'constant'
-        @output << "@#{index}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
+        @output << "//push constant #{index}\n@#{index}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
       else
         @output << "NORMAL PUSH FROM NAMED STACK"
       end

@@ -11,7 +11,7 @@ class Parser
   #maybe not a best practice way to do it but seems to make sense
 
 
-  def initialize(input_file = './StackArithmetic/SimpleAdd/SimpleAdd.vm')
+  def initialize(input_file)
     # Opens the input file and gets ready to parse it.
     @input =  File.open(input_file).read
     @commands = @input.gsub(/\/\/.+$/, "").delete("\r").split("\n").delete_if(&:empty?)
