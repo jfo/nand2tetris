@@ -1,3 +1,8 @@
+#!/usr/bin/env ruby
+
+
+
+
 # the main program should construct a parser to parse the vm input file
 # and a codewriter to generate code into the corresponding output file.
 # it should then arch through the vm commands in the input file and generate
@@ -7,14 +12,19 @@
 # should process all the .vm fies in this directory. in doing so, it should use a seperate
 # Parser for each file and a single codewriter to output
 
+
+
+
 require_relative 'parser'
 require_relative 'codewriter'
 
-ARGV << '/Users/jeff/code/nand2tetris/projects/07/StackArithmetic/StackTest/StackTest.vm'
 input = Parser.new(ARGV[0])
 
+name = ARGV[0].sub(/\..+$/, '')
 
-output = CodeWriter.new('StackTest')
+
+
+output = CodeWriter.new(name)
 
 until !input.has_more_commands?
   input.advance

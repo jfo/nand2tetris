@@ -1,6 +1,5 @@
 require_relative 'code'
 require_relative 'symboltable'
-require 'pry'
 
 class Parser
   include Code
@@ -159,6 +158,4 @@ class Parser
 end
 
 x = Parser.new('Pong.asm')
-binding.pry
-
 

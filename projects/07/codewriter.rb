@@ -7,7 +7,7 @@ class CodeWriter
 
   def initialize(output_file)
     # Opens the output file and gets ready to write into it
-    @output = File.open('/Users/jeff/code/nand2tetris/projects/07/StackArithmetic/StackTest/' + output_file + '.asm', 'w+')
+    @output = File.open(output_file + '.asm', 'w+')
     @loop_count = 0
   end
 
@@ -48,7 +48,8 @@ class CodeWriter
 
   end
 
-  def write_push_pop(command, segment, index)
+  def write_push_pop(command, segment, index = 0)
+
 
     case segment
     when 'local'
@@ -60,19 +61,29 @@ class CodeWriter
     when 'that'
       seg = 'THAT'
     when 'pointer'
+      seg = (3 + index.to_i).to_s
     when 'temp'
+      seg = (5 + index.to_i).to_s
     when 'constant'
+      seg = index
     when 'static'
+      seg = "static.#{index}"
     end
-
     if command == 'C_PUSH'
       if segment == 'constant'
         @output << "//push constant #{index}\n@#{index}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
+      elsif segment == 'temp' || segment == 'pointer'
+        @output << "//push #{seg} #{index}\n @#{seg}\n D=M \n @SP \n A=M\n M=D \n @SP \n M=M+1"
       else
-        @output << "NORMAL PUSH FROM NAMED STACK"
+        @output << "//push #{seg} #{index}\n@#{index}\nD=A\n@#{seg}\nA=M+D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
       end
+
     elsif command == 'C_POP'
-      # @output << "pop\nseg\n#{index}\n"
+      if segment == 'temp' || segment == 'pointer'
+        @output << "//pop #{seg} #{index}\n @SP\n M=M-1 \n A=M \n D=M \n @#{seg}\n M=D\n "
+      else
+        @output << "//pop #{seg} #{index}\n @#{index}\nD=A\n@#{seg}\nM=M+D\n@SP\nM=M-1\nA=M\nD=M\n@#{seg}\nA=M\nM=D\n@#{index}\nD=A\n@#{seg}\nM=M-D\n"
+      end
     end
 
   end
