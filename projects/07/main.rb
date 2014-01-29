@@ -18,13 +18,12 @@
 require_relative 'parser'
 require_relative 'codewriter'
 
-input = Parser.new(ARGV[0])
+input = Parser.new('/users/jeff/code/nand2tetris/projects/08/FunctionCalls/SimpleFunction/SimpleFunction.vm')
 
-name = ARGV[0].sub(/\..+$/, '')
+# name = ARGV[0].sub(/\..+$/, '')
 
+output = CodeWriter.new('/users/jeff/code/nand2tetris/projects/08/FunctionCalls/SimpleFunction/SimpleFunction')
 
-
-output = CodeWriter.new(name)
 
 until !input.has_more_commands?
   input.advance
@@ -33,6 +32,18 @@ until !input.has_more_commands?
     output.write_arithmetic(input.command)
   when 'C_PUSH', 'C_POP'
     output.write_push_pop(input.command_type?, input.arg1, input.arg2)
+  when 'C_LABEL'
+    output.write_label(input.arg1)
+  when 'C_GOTO'
+    output.write_goto(input.arg1)
+  when 'C_IF'
+    output.write_if(input.arg1)
+  when 'C_FUNCTION'
+    output.write_function(input.arg1, input.arg2)
+  when 'C_CALL'
+    output.write_call(input.arg1, input.arg2)
+  when 'C_RETURN'
+    output.write_return
   end
 
 end

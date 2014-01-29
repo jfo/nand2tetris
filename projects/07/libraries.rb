@@ -8,13 +8,12 @@ def make_command_dict
 
   command_types['push'] = 'C_PUSH'
   command_types['pop'] = 'C_POP'
+  command_types['label'] = 'C_LABEL'
+  command_types['goto'] = 'C_GOTO'
+  command_types['if-goto'] = 'C_IF'
+  command_types['function'] = 'C_FUNCTION'
+  command_types['call'] = 'C_CALL'
+  command_types['return'] = 'C_RETURN'
 
   command_types
-end
-
-
-def make_asm_dict
-
-  #code
-
 end
