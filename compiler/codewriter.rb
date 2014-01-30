@@ -7,15 +7,21 @@ class CodeWriter
 
   def initialize(output_file)
     # Opens the output file and gets ready to write into it
+    output_file = output_file.delete('.vm') if output_file.include?('.vm')
     @output = File.open(output_file + '.asm', 'w+')
     @loop_count = 0
     @ret = 0
     @frame = 0
-    @static_master_index  = 14
+    @static_master_index  = 16
+    @staticindex = 0
   end
 
   def static_master_index
     @static_master_index += 1
+  end
+
+  def staticindex
+    @staticindex += 1
   end
 
   def frame
@@ -37,6 +43,7 @@ class CodeWriter
     # Informs the code writer that the translation of a new VM file is started
     #
     @filename = file_name
+    @static_master_index += @staticindex
     @staticindex = 0
   end
 
@@ -83,7 +90,7 @@ class CodeWriter
     when 'constant'
       seg = index
     when 'static'
-      seg = "#{@filename}.#{@staticindex.to_s}"
+      seg = "#{@filename}.#{staticindex.to_s}"
     end
 
 
@@ -94,7 +101,7 @@ class CodeWriter
       elsif segment == 'temp' || segment == 'pointer'
         @output << "//push #{seg} #{index}\n @#{seg}\n D=M \n @SP \n A=M\n M=D \n @SP \n M=M+1\n"
       elsif segment == 'static'
-       @output << "//push #{seg} #{index}\n @R#{static_master_index.to_s}\n D=M \n @SP \n A=M\n M=D \n @SP \n M=M+1\n"
+       @output << "//push #{seg} #{index}\n @#{(@static_master_index + index.to_i).to_s}\n D=M \n @SP \n A=M\n M=D \n @SP \n M=M+1\n"
       else
         @output << "//push #{seg} #{index}\n@#{index}\nD=A\n@#{seg}\nA=M+D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
       end
@@ -103,7 +110,7 @@ class CodeWriter
       if segment == 'temp' || segment == 'pointer'
         @output << "//pop #{seg} #{index}\n @SP\n M=M-1 \n A=M \n D=M \n @#{seg}\n M=D\n "
       elsif segment == 'static'
-        @output << "//pop #{seg} #{index}\n @R#{static_master_index.to_s}\n D=M \n @SP \n A=M\n M=D \n @SP \n M=M+1\n"
+        @output << "//pop #{seg} #{index}\n @SP\n M=M-1 \n A=M \n D=M \n@#{(@static_master_index + index.to_i).to_s}\n M=D \n"
       else
         @output << "//pop #{seg} #{index}\n @#{index}\nD=A\n@#{seg}\nM=M+D\n@SP\nM=M-1\nA=M\nD=M\n@#{seg}\nA=M\nM=D\n@#{index}\nD=A\n@#{seg}\nM=M-D\n"
       end

@@ -22,76 +22,43 @@ A=M
 M=D
 @SP
 M=M+1
-//pop static.8 8
- @8
-D=A
-@static.8
-M=M+D
-@SP
-M=M-1
-A=M
-D=M
-@static.8
-A=M
-M=D
-@8
-D=A
-@static.8
-M=M-D
-//pop static.3 3
- @3
-D=A
-@static.3
-M=M+D
-@SP
-M=M-1
-A=M
-D=M
-@static.3
-A=M
-M=D
-@3
-D=A
-@static.3
-M=M-D
-//pop static.1 1
- @1
-D=A
-@static.1
-M=M+D
-@SP
-M=M-1
-A=M
-D=M
-@static.1
-A=M
-M=D
-@1
-D=A
-@static.1
-M=M-D
-//push static.3 3
-@3
-D=A
-@static.3
-A=M+D
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1
-//push static.1 1
-@1
-D=A
-@static.1
-A=M+D
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1
+//pop StaticTest.0 8
+ @SP
+ M=M-1 
+ A=M 
+ D=M 
+@24
+ M=D 
+//pop StaticTest.0 3
+ @SP
+ M=M-1 
+ A=M 
+ D=M 
+@19
+ M=D 
+//pop StaticTest.0 1
+ @SP
+ M=M-1 
+ A=M 
+ D=M 
+@17
+ M=D 
+//push StaticTest.0 3
+ @19
+ D=M 
+ @SP 
+ A=M
+ M=D 
+ @SP 
+ M=M+1
+//push StaticTest.0 1
+ @17
+ D=M 
+ @SP 
+ A=M
+ M=D 
+ @SP 
+ M=M+1
 //sub
 @SP
 M=M-1
@@ -103,17 +70,14 @@ A=M
 M=M-D
 @SP
 M=M+1
-//push static.8 8
-@8
-D=A
-@static.8
-A=M+D
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1
+//push StaticTest.0 8
+ @24
+ D=M 
+ @SP 
+ A=M
+ M=D 
+ @SP 
+ M=M+1
 //add
 @SP
 A=M-1

@@ -29,7 +29,8 @@ end
 
 inputs = []
 files.each do |e|
-  inputs <<  Parser.new(ARGV[0] + e)
+  inputs <<  Parser.new(ARGV[0] + e) if files.length > 1
+  inputs <<  Parser.new(e) if files.length == 1
 end
 
 output = CodeWriter.new(ARGV[0].delete('/'))
