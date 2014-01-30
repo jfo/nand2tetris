@@ -112,7 +112,7 @@ class CodeWriter
     # This code must be placed at the beginning of the output file.
 
     @output << "@256 \n D=A \n @SP \n M=D \n"
-    write_function('sys.init', '0')
+    write_call('sys.init', '0')
 
   end
 
@@ -133,8 +133,10 @@ class CodeWriter
 
   def write_call(function_name, num_args)
     # writes assembly code that effects the call command
+    #
+      point = ret
       @output << "// function #{function_name} #{num_args}\n
-                  @return.#{ret}\n
+                  @return.#{point}\n
                   D=A\n
                   @SP\n
                   A=M\n
@@ -188,7 +190,7 @@ class CodeWriter
                   M=D\n
                   @#{function_name}\n
                   0;JMP\n
-                  (return.#{ret})\n"
+                  (return.#{point})\n"
   end
 
   def write_return
@@ -258,15 +260,30 @@ class CodeWriter
 
                 @R14\n
                 A=M
-                0;JMP\n
-                "
+                0;JMP\n "
   end
 
 
   def write_function(function_name, num_locals)
     # writes assembly code that effects the function command
     looppoint= looper
-    @output << "(#{function_name})\n @#{num_locals}\n D=A\n (loop.#{looppoint})\n @SP\n A=M\n M=0\n @SP\n M=M+1\n D=D-1\n @loop.#{looppoint}\n D;JGT\n"
+    skip = looper
+
+    @output << "(#{function_name})\n
+                @#{num_locals}\n
+                D=A\n
+                @skip.#{skip}\n
+                D;JEQ\n
+                (loop.#{looppoint})\n
+                @SP\n
+                A=M\n
+                M=0\n
+                @SP\n
+                M=M+1\n
+                D=D-1\n
+                @loop.#{looppoint}\n
+                D;JGT\n
+                (skip.#{skip})\n"
   end
 
 end
