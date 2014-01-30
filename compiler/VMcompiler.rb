@@ -33,7 +33,10 @@ end
 
 output = CodeWriter.new(ARGV[0].delete('/'))
 
+output.write_init
 inputs.each do |file|
+
+
 
   until !file.has_more_commands?
     file.advance

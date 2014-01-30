@@ -185,7 +185,7 @@ class CodeWriter
                   M=D\n
                   @#{function_name}\n
                   0;JMP\n
-                  (return.#{ret})"
+                  (return.#{ret})\n"
   end
 
   def write_return
@@ -193,6 +193,7 @@ class CodeWriter
 
 
     @output << "@LCL\n
+                A=M\n
                 D=M\n
                 @R13\n
                 M=D\n
