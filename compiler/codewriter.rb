@@ -77,11 +77,14 @@ class CodeWriter
     when 'static'
       seg = "static.#{index}"
     end
+
+
+
     if command == 'C_PUSH'
       if segment == 'constant'
         @output << "//push constant #{index}\n@#{index}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
       elsif segment == 'temp' || segment == 'pointer'
-        @output << "//push #{seg} #{index}\n @#{seg}\n D=M \n @SP \n A=M\n M=D \n @SP \n M=M+1"
+        @output << "//push #{seg} #{index}\n @#{seg}\n D=M \n @SP \n A=M\n M=D \n @SP \n M=M+1\n"
       else
         @output << "//push #{seg} #{index}\n@#{index}\nD=A\n@#{seg}\nA=M+D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
       end
