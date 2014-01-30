@@ -1,0 +1,10 @@
+
+function Sys.init 0
+
+push constant 2
+push constant 2
+call test 2
+
+label WHILE
+goto WHILE              // Loop infinitely
+
