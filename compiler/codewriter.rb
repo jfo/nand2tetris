@@ -133,53 +133,26 @@ class CodeWriter
 
   def write_call(function_name, num_args)
     # writes assembly code that effects the call command
+      point = ret
       @output << "// function #{function_name} #{num_args}\n
-                  @return.#{ret}\n
+                  @ret.#{point}\n
                   D=A\n
                   @SP\n
                   A=M\n
                   M=D\n
-                  @SP\n
-                  M=M+1\n
-
-                  @LCL\n
-                  D=M\n
-                  @SP\n
+                  //ugh\n"
+      write_push_pop('C_PUSH', 'local', '0')
+      write_push_pop('C_PUSH', 'local', '0')
+      write_push_pop('C_PUSH', 'argument', '0')
+      write_push_pop('C_PUSH', 'this', '0')
+      write_push_pop('C_PUSH', 'that', '0')
+      @output << "@SP\n
                   A=M\n
-                  M=D\n
-                  @SP\n
-                  M=M+1\n
-
-                  @ARG\n
                   D=M\n
-                  @SP\n
-                  A=M\n
-                  M=D\n
-                  @SP\n
-                  M=M+1\n
-
-                  @THIS\n
-                  D=M\n
-                  @SP\n
-                  A=M\n
-                  M=D\n
-                  @SP\n
-                  M=M+1\n
-
-                  @THAT\n
-                  D=M\n
-                  @SP\n
-                  A=M\n
-                  M=D\n
-                  @SP\n
-                  M=M+1\n
-
-                  @5\n
-                  D=A\n
                   @#{num_args}\n
-                  D=D+A\n
-                  @SP\n
-                  D=A-D\n
+                  D=D-A\n
+                  @5\n
+                  D=D-A\n
                   @ARG\n
                   M=D\n
                   @SP\n
@@ -188,7 +161,11 @@ class CodeWriter
                   M=D\n
                   @#{function_name}\n
                   0;JMP\n
-                  (return.#{ret})\n"
+                  (ret.#{point})\n"
+
+
+
+
   end
 
   def write_return
@@ -265,8 +242,24 @@ class CodeWriter
 
   def write_function(function_name, num_locals)
     # writes assembly code that effects the function command
+    #
     looppoint= looper
-    @output << "(#{function_name})\n @#{num_locals}\n D=A\n (loop.#{looppoint})\n @SP\n A=M\n M=0\n @SP\n M=M+1\n D=D-1\n @loop.#{looppoint}\n D;JGT\n"
+    skip = looper
+    @output << "(#{function_name})\n
+                @#{num_locals}\n
+                D=A\n
+                @skip.#{skip}\n
+                D,JEQ\n
+                (loop.#{looppoint})\n
+                @SP\n
+                A=M\n
+                M=0\n
+                @SP\n
+                M=M+1\n
+                D=D-1\n
+                @loop.#{looppoint}\n
+                D;JGT\n
+                (skip.#{skip})\n"
   end
 
 end
