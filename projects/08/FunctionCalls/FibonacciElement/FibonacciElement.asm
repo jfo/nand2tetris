@@ -2,7 +2,7 @@
  D=A 
  @SP 
  M=D 
-// function sys.init 0
+// function Sys.init 0
 
                   @return.1
 
@@ -79,21 +79,20 @@
                   M=M+1
 
 
-                  @5
-
-                  D=A
-
-                  @0
-
-                  D=D+A
 
                   @SP
 
-                  D=A-D
+                  D=M
 
+                  @0
+
+                  D=D-A
+                  @5
+                  D=D-A
                   @ARG
 
                   M=D
+
 
                   @SP
 
@@ -103,7 +102,7 @@
 
                   M=D
 
-                  @sys.init
+                  @Sys.init
 
                   0;JMP
 
@@ -156,6 +155,26 @@ A=M
 M=D
 @SP
 M=M+1
+//lt
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+D=D-M
+M=1
+D=!D
+(anchor.3)
+@SP
+A=M
+M=M-1
+@anchor.3
+D=!D
+D;JGT
+@SP
+M=M+1
 // if-goto IF_TRUE
 @SP
 M=M-1
@@ -180,8 +199,6 @@ M=D
 @SP
 M=M+1
 @LCL
-
-                A=M
 
                 D=M
 
@@ -406,21 +423,20 @@ M=M+1
                   M=M+1
 
 
-                  @5
-
-                  D=A
-
-                  @1
-
-                  D=D+A
 
                   @SP
 
-                  D=A-D
+                  D=M
 
+                  @1
+
+                  D=D-A
+                  @5
+                  D=D-A
                   @ARG
 
                   M=D
+
 
                   @SP
 
@@ -542,21 +558,20 @@ M=M+1
                   M=M+1
 
 
-                  @5
-
-                  D=A
-
-                  @1
-
-                  D=D+A
 
                   @SP
 
-                  D=A-D
+                  D=M
 
+                  @1
+
+                  D=D-A
+                  @5
+                  D=D-A
                   @ARG
 
                   M=D
+
 
                   @SP
 
@@ -571,9 +586,18 @@ M=M+1
                   0;JMP
 
                   (return.3)
+//add
+@SP
+A=M-1
+D=M
+@SP
+M=M-1
+M=M-1
+A=M
+M=M+D
+@SP
+M=M+1
 @LCL
-
-                A=M
 
                 D=M
 
@@ -803,21 +827,20 @@ M=M+1
                   M=M+1
 
 
-                  @5
-
-                  D=A
-
-                  @1
-
-                  D=D+A
 
                   @SP
 
-                  D=A-D
+                  D=M
 
+                  @1
+
+                  D=D-A
+                  @5
+                  D=D-A
                   @ARG
 
                   M=D
+
 
                   @SP
 

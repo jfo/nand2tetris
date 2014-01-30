@@ -15,6 +15,7 @@
 require_relative 'parser'
 require_relative 'codewriter'
 
+require 'pry'
 
 ARGV[0]
 
@@ -40,6 +41,7 @@ inputs.each do |file|
 
   until !file.has_more_commands?
     file.advance
+    file.command.strip!
     case file.command_type?
     when 'C_ARITHMETIC'
       output.write_arithmetic(file.command)

@@ -55,6 +55,8 @@ class CodeWriter
       @output << "//not\n@SP\nM=M-1\nA=M\nM=!M\n@SP\nM=M+1\n"
     when 'neg'
       @output << "//neg\n@SP\nM=M-1\nA=M\nM=-M\n@SP\nM=M+1\n"
+    else
+      @output << "DERPPPPPPPP"
     end
   end
 
@@ -112,7 +114,7 @@ class CodeWriter
     # This code must be placed at the beginning of the output file.
 
     @output << "@256 \n D=A \n @SP \n M=D \n"
-    write_call('sys.init', '0')
+    write_call('Sys.init', '0')
 
   end
 
@@ -176,14 +178,16 @@ class CodeWriter
                   @SP\n
                   M=M+1\n
 
-                  @5\n
-                  D=A\n
-                  @#{num_args}\n
-                  D=D+A\n
+
                   @SP\n
-                  D=A-D\n
+                  D=M\n
+                  @#{num_args}\n
+                  D=D-A
+                  @5
+                  D=D-A
                   @ARG\n
                   M=D\n
+
                   @SP\n
                   D=M\n
                   @LCL\n
@@ -196,9 +200,7 @@ class CodeWriter
   def write_return
     # writes assembly code that effects the return command
 
-
     @output << "@LCL\n
-                A=M\n
                 D=M\n
                 @R13\n
                 M=D\n
