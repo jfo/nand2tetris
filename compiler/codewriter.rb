@@ -11,6 +11,11 @@ class CodeWriter
     @loop_count = 0
     @ret = 0
     @frame = 0
+    @static_master_index  = 14
+  end
+
+  def static_master_index
+    @static_master_index += 1
   end
 
   def frame
@@ -30,6 +35,9 @@ class CodeWriter
 
   def set_file_name(file_name)
     # Informs the code writer that the translation of a new VM file is started
+    #
+    @filename = file_name
+    @staticindex = 0
   end
 
   def write_arithmetic(command)
@@ -55,8 +63,6 @@ class CodeWriter
       @output << "//not\n@SP\nM=M-1\nA=M\nM=!M\n@SP\nM=M+1\n"
     when 'neg'
       @output << "//neg\n@SP\nM=M-1\nA=M\nM=-M\n@SP\nM=M+1\n"
-    else
-      @output << "DERPPPPPPPP"
     end
   end
 
@@ -77,7 +83,7 @@ class CodeWriter
     when 'constant'
       seg = index
     when 'static'
-      seg = "static.#{index}"
+      seg = "#{@filename}.#{@staticindex.to_s}"
     end
 
 
@@ -87,6 +93,8 @@ class CodeWriter
         @output << "//push constant #{index}\n@#{index}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
       elsif segment == 'temp' || segment == 'pointer'
         @output << "//push #{seg} #{index}\n @#{seg}\n D=M \n @SP \n A=M\n M=D \n @SP \n M=M+1\n"
+      elsif segment == 'static'
+       @output << "//push #{seg} #{index}\n @R#{static_master_index.to_s}\n D=M \n @SP \n A=M\n M=D \n @SP \n M=M+1\n"
       else
         @output << "//push #{seg} #{index}\n@#{index}\nD=A\n@#{seg}\nA=M+D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
       end
@@ -94,6 +102,8 @@ class CodeWriter
     elsif command == 'C_POP'
       if segment == 'temp' || segment == 'pointer'
         @output << "//pop #{seg} #{index}\n @SP\n M=M-1 \n A=M \n D=M \n @#{seg}\n M=D\n "
+      elsif segment == 'static'
+        @output << "//pop #{seg} #{index}\n @R#{static_master_index.to_s}\n D=M \n @SP \n A=M\n M=D \n @SP \n M=M+1\n"
       else
         @output << "//pop #{seg} #{index}\n @#{index}\nD=A\n@#{seg}\nM=M+D\n@SP\nM=M-1\nA=M\nD=M\n@#{seg}\nA=M\nM=D\n@#{index}\nD=A\n@#{seg}\nM=M-D\n"
       end

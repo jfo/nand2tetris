@@ -35,8 +35,11 @@ end
 output = CodeWriter.new(ARGV[0].delete('/'))
 
 output.write_init
+i = 0
 inputs.each do |file|
 
+  output.set_file_name(files[i].delete('.vm'))
+  i += 1
 
 
   until !file.has_more_commands?
@@ -44,7 +47,7 @@ inputs.each do |file|
     file.command.strip!
     case file.command_type?
     when 'C_ARITHMETIC'
-      output.write_arithmetic(file.command)
+      output.write_arithmetic(file.command )
     when 'C_PUSH', 'C_POP'
       output.write_push_pop(file.command_type?, file.arg1, file.arg2)
     when 'C_LABEL'
