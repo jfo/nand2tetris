@@ -14,14 +14,34 @@ else
   arg = ARGV[0]
 end
 
-binding.pry
 
 input = JackTokenizer.new(arg)
+#engine = CompilationEngine.new()
 name = arg.sub(/.jack/, '') + '.xml'
+output = File.open(name, 'w')
 
 # will accept name of directory instead later on
+#
+
+while input.has_more_tokens?
+  type = input.token_type
+  case type
+  when :keyword
+    keyword = input.key_word
+    #??
+  when :symbol
+    symbol = input.symbol
+  when :identifier
+    id = input.identifier
+  when :int_const
+    int = input.int_val
+  when :string_const
+    str = input.string_val
+  end
+end
 
 
+binding.pry
 
 
 

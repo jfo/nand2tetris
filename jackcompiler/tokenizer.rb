@@ -1,11 +1,15 @@
 class JackTokenizer
 
+  attr_accessor :current_token
   def initialize(filename)
     # opens the input file and gets ready to tokenize it
+    @commands = []
+    @current_token = ""
   end
 
-  def has_more_tokens
+  def has_more_tokens?
     # do we have more tokens in the input?
+    return false
   end
 
   def advance
@@ -25,7 +29,7 @@ class JackTokenizer
     end
 
     def symbol
-      # returns the characrer which is the current token, should be called only when the current token is symbol
+      # returns the character which is the current token, should be called only when the current token is symbol
     end
 
     def identifier
