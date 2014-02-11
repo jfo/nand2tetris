@@ -1,11 +1,11 @@
 class JackTokenizer
 
-  def initialize
+  def initialize(filename)
     # opens the input file and gets ready to tokenize it
   end
 
   def has_more_tokens
-    # do we have ore tokens in the input?
+    # do we have more tokens in the input?
   end
 
   def advance
@@ -16,7 +16,6 @@ class JackTokenizer
   def token_type
     # returns the type of the current token
   end
-
 
 
   private
