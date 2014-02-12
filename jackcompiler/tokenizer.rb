@@ -1,9 +1,11 @@
 class JackTokenizer
 
   attr_accessor :current_token
-  def initialize(filename)
+  def initialize(filename = '/Users/jeff/code/nand2tetris/projects/10/ArrayTest/Main.jack')
     # opens the input file and gets ready to tokenize it
-    @commands = []
+
+    @lines = clean_lines(File.open(filename, 'r').read)
+
     @current_token = ""
   end
 
@@ -42,6 +44,16 @@ class JackTokenizer
 
     def string_val
       # returns the string value of the current token, without the double quotes. should be called only when token type is string_const.
+    end
+
+
+    def clean_lines(input)
+      tokens = input.sub(/\/\*.*\*\//, '').split("\n")
+      tokens.collect! do |e|
+        e.sub(/\/\/.*$/, '').sub("\r", '').sub(/^\s*/, '')
+      end
+
+      tokens.reject! { |c| c.empty? }
     end
 
 end
