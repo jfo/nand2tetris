@@ -1,4 +1,4 @@
-# #!/usr/bin/env ruby
+#!/usr/bin/env ruby
 
 require 'pry'
 require_relative 'tokenizer.rb'
@@ -16,37 +16,17 @@ end
 
 input = JackTokenizer.new()
 #engine = CompilationEngine.new()
+
+
+input.xml_tokenize
+puts input.xml
+
+
 name = arg.sub(/.jack/, '') + '.xml'
 output = File.open(name, 'w')
 
 # will accept name of directory instead later on
 
-
-while input.has_more_tokens?
-  type = input.token_type
-
-  puts type.upcase
-  puts '---------'
-  case type.downcase
-
-  when 'keyword'
-    out = input.key_word
-  when 'symbol'
-    out = input.symbol
-  when 'identifier'
-    out = input.identifier
-  when 'int_const'
-    out = input.int_val
-  when 'string_const'
-    out = input.string_val
-  end
-
-  puts out
-  puts
-  gets
-  input.advance
-
-end
 
 
 

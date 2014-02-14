@@ -1,7 +1,7 @@
 require 'pry'
 
 class JackTokenizer
-  attr_accessor :current_token, :tokens, :lines
+  attr_accessor :current_token, :tokens, :lines, :xml
 
   @@symbols = '{}[]().,;+-*/&|<>=~'.split(//)
   @@keywords = "class
@@ -25,6 +25,7 @@ class JackTokenizer
   def initialize(filename = '/Users/jeff/code/nand2tetris/projects/10/ArrayTest/Main.jack')
     # opens the input file and gets ready to tokenize it
 
+    @xml = ''
     @lines = clean_lines(File.open(filename, 'r').read)
     @tokens = tokenize(@lines)
     @current_token = ""
@@ -120,19 +121,33 @@ class JackTokenizer
       lines.map! { |line| line.split }
       lines.flatten!
     end
+
+
+    def xml_tokenize
+      while has_more_tokens?
+        type = token_type
+
+        case type.downcase
+
+        when 'keyword'
+          tag = key_word
+        when 'symbol'
+          tag = symbol
+        when 'identifier'
+          tag = identifier
+        when 'int_const'
+          tag = int_val
+        when 'string_const'
+          tag = string_val
+        end
+
+        @xml += "<#{tag}> #{@current_token} </#{tag}>\n"
+
+        advance
+
+      end
+    end
+
 end
 
 x = JackTokenizer.new
-
-# until !x.has_more_tokens?
-#   10.times do
-#     x.advance
-#     puts x.token_type
-#     puts
-#     puts x.current_token
-#     puts
-#   end
-#   gets
-# end
-
-
