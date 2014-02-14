@@ -1,7 +1,7 @@
 class CompilationEngine
 
   def initilize
-    #creats a new compilation engine with the givn input and output. The next routine to be called must be compile_class()
+    #creates a new compilation engine with the givn input and output. The next routine to be called must be compile_class()
   end
 
   def compile_class
