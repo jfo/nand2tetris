@@ -8,7 +8,7 @@ require_relative 'compilationengine.rb'
 
 
 if ARGV[0].nil?
-  arg = "helloworld"
+  arg = "MainT"
 else
   arg = ARGV[0]
 end
@@ -16,14 +16,13 @@ end
 
 
 tokens = JackTokenizer.new('/Users/jeff/code/nand2tetris/projects/10/ArrayTest/Main.jack')
-engine = CompilationEngine.new(tokens)
+# engine = CompilationEngine.new(tokens.output)
 # input.xml_tokenize
-engine.xml_ize
 
 name = arg.sub(/.jack/, '') + '.xml'
-File.open(name, 'w') { |file| file.write(engine.output) }
+File.open(name, 'w') { |file| file.write(tokens.output) }
 
-binding.pry
+# binding.pry
 
 # will accept name of directory instead later on
 

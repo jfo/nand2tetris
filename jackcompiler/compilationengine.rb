@@ -6,34 +6,10 @@ class CompilationEngine
     #creates a new compilation engine with the given input and output. The next routine to be called must be compile_class()
     @input = input
     @output = ''
+
+    @symbol_switch = {}
   end
 
-  def xml_ize
-
-    until !@input.has_more_tokens?
-      type = @input.token_type.downcase
-      case type
-      when 'keyword'
-        type = 'keyword'
-        out = @input.key_word
-      when 'symbol'
-        type = 'symbol'
-        out = @input.symbol
-      when 'identifier'
-        type = 'identifier'
-        out = @input.identifier
-      when 'int_const'
-        type = 'integerConstant'
-        out = @input.int_val
-      when 'string_const'
-        type = 'stringConstant'
-        out = @input.string_val
-      end
-      @output += "<#{type}> #{out} </#{type}>\n"
-      @input.advance
-    end
-
-  end
 
   def compile_class
     # compiles a complete class

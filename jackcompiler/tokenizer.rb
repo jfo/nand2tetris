@@ -1,5 +1,5 @@
 class JackTokenizer
-  attr_accessor :current_token, :tokens
+  attr_accessor :current_token, :tokens, :output
 
   @@symbols = '{}[]().,;+-*/&|<>=~'.split(//)
   @@keywords = "class
@@ -26,11 +26,11 @@ class JackTokenizer
 
   def initialize(filename)
     # opens the input file and gets ready to tokenize it
-
     @tokens = tokenize(clean_lines(File.open(filename, 'r').read))
     @current_token = nil
     advance
-
+    @output = ''
+    xml_ize
   end
 
   def has_more_tokens?
@@ -40,6 +40,8 @@ class JackTokenizer
   def advance
     if has_more_tokens?
       @current_token = @tokens.shift
+    else
+      @current_token = :done
     end
   end
 
@@ -51,7 +53,7 @@ class JackTokenizer
       "KEYWORD"
     elsif @current_token[0] == '"'
       "STRING_CONST"
-    elsif @current_token.is_a?(Integer)
+    elsif @current_token[0] =~ /[0-9]/
       "INT_CONST"
     else
       "IDENTIFIER"
@@ -76,7 +78,7 @@ class JackTokenizer
 
     def int_val
       # returns the integer value of the current token. should be called only if the token type is int_const.
-      @current_token.to_i
+      @current_token.scan(/[0-9]/).join.to_i
     end
 
     def string_val
@@ -131,5 +133,43 @@ class JackTokenizer
       return lines
 
     end
+
+    def xml_ize
+      @output += "<tokens>\n"
+
+      until @current_token ==  :done
+        type = token_type.downcase
+        case type
+        when 'keyword'
+          type = 'keyword'
+          out = key_word
+        when 'symbol'
+          type = 'symbol'
+          out = symbol
+        when 'identifier'
+          type = 'identifier'
+          out = identifier
+        when 'int_const'
+          type = 'integerConstant'
+          out = int_val
+        when 'string_const'
+          type = 'stringConstant'
+          out = string_val
+        end
+
+        out = symbolize(out)
+
+        @output += "<#{type}> #{out} </#{type}>\n"
+        advance
+      end
+        @output += "</tokens>\n"
+    end
+
+    def symbolize(symbol)
+      switch = { '<' => '&lt;', '>' => '&gt;', '&' => '&amp;' }
+      symbol = switch[symbol] if switch.keys.include?(symbol)
+      symbol
+    end
+
 end
 
