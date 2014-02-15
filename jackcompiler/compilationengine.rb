@@ -1,7 +1,6 @@
 class CompilationEngine
 
-
-  def initilize
+  def initilize(input)
     #creates a new compilation engine with the given input and output. The next routine to be called must be compile_class()
   end
 
@@ -75,3 +74,59 @@ class CompilationEngine
     # compiles a (possibly empty) comma-separated list of expressions
   end
 end
+
+
+
+    def xml_tokenize
+
+      while has_more_tokens?
+
+#         if @current_token == 'class'
+#           @xml += "<class>\n"
+#           @nest << "class"
+#         elsif @current_token == 'function'
+#           @xml += "<subroutineDec>\n"
+#           @nest << "subroutineDec"
+#           @state = :subroutine
+#         elsif @current_token == ")"
+#           @xml += "</parameterList>\n"
+#         end
+
+#         if @current_token == "{" && @state == :subroutine
+#           @xml += "<subroutineBody>\n"
+#         end
+
+        type = token_type.downcase
+        case type
+        when 'keyword'
+          type = 'keyword'
+          out = key_word
+        when 'symbol'
+          type = 'symbol'
+          out = symbol
+        when 'identifier'
+          type = 'identifier'
+          out = identifier
+        when 'int_const'
+          type = 'integerConstant'
+          out = int_val
+        when 'string_const'
+          type = 'stringConstant'
+          out = string_val
+        end
+
+
+        @xml += "<#{type}> #{out} </#{type}>\n"
+
+#         if @current_token == "("
+#           @xml += "<parameterList>\n"
+#         elsif @current_token == '}'
+#           @xml += "</#{@nest.pop}>\n"
+#         end
+
+        advance
+
+      end
+
+
+    end

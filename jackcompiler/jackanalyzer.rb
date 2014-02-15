@@ -14,17 +14,18 @@ else
 end
 
 
-input = JackTokenizer.new()
-#engine = CompilationEngine.new()
+
+tokens = JackTokenizer.new('/Users/jeff/code/nand2tetris/projects/10/ArrayTest/Main.jack')
+# engine = CompilationEngine.new(tokens)
 
 
-input.xml_tokenize
+# input.xml_tokenize
 system("clear")
 
 name = arg.sub(/.jack/, '') + '.xml'
-output = File.open(name, 'w')
-output << input.xml
 
+
+binding.pry
 
 # will accept name of directory instead later on
 
