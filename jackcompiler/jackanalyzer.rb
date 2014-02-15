@@ -16,14 +16,12 @@ end
 
 
 tokens = JackTokenizer.new('/Users/jeff/code/nand2tetris/projects/10/ArrayTest/Main.jack')
-# engine = CompilationEngine.new(tokens)
-
-
+engine = CompilationEngine.new(tokens)
 # input.xml_tokenize
-system("clear")
+engine.xml_ize
 
 name = arg.sub(/.jack/, '') + '.xml'
-
+File.open(name, 'w') { |file| file.write(engine.output) }
 
 binding.pry
 

@@ -1,5 +1,5 @@
 class JackTokenizer
-  attr_accessor :current_token, :tokens, :lines, :xml
+  attr_accessor :current_token, :tokens
 
   @@symbols = '{}[]().,;+-*/&|<>=~'.split(//)
   @@keywords = "class
@@ -27,10 +27,8 @@ class JackTokenizer
   def initialize(filename)
     # opens the input file and gets ready to tokenize it
 
-    @nest = []
-    @xml = ''
-    @lines = clean_lines(File.open(filename, 'r').read)
-    @tokens = tokenize(@lines)
+    @tokens = tokenize(clean_lines(File.open(filename, 'r').read))
+    @current_token = nil
     advance
 
   end
@@ -60,8 +58,6 @@ class JackTokenizer
     end
 
   end
-
-
 
     def key_word
       # returns the keyword which is the current token should be called only when token type is keyword

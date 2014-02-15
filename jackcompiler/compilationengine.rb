@@ -1,24 +1,51 @@
 class CompilationEngine
 
-  def initilize(input)
+  attr_reader :input, :output
+
+  def initialize(input)
     #creates a new compilation engine with the given input and output. The next routine to be called must be compile_class()
+    @input = input
+    @output = ''
   end
 
+  def xml_ize
+
+    until !@input.has_more_tokens?
+      type = @input.token_type.downcase
+      case type
+      when 'keyword'
+        type = 'keyword'
+        out = @input.key_word
+      when 'symbol'
+        type = 'symbol'
+        out = @input.symbol
+      when 'identifier'
+        type = 'identifier'
+        out = @input.identifier
+      when 'int_const'
+        type = 'integerConstant'
+        out = @input.int_val
+      when 'string_const'
+        type = 'stringConstant'
+        out = @input.string_val
+      end
+      @output += "<#{type}> #{out} </#{type}>\n"
+      @input.advance
+    end
+
+  end
 
   def compile_class
     # compiles a complete class
   end
 
-
   def compile_class_var_dec
     # compiles a static declaration
   end
 
-
   def compile_subroutine
     # compiles a complete method, function, or constructor
   end
-
 
   def compile_parameter_list
     # compiles a (possibly empty) parameter list, not including the enclosing ()
@@ -73,60 +100,6 @@ class CompilationEngine
   def compile_expression_list
     # compiles a (possibly empty) comma-separated list of expressions
   end
+
+
 end
-
-
-
-    def xml_tokenize
-
-      while has_more_tokens?
-
-#         if @current_token == 'class'
-#           @xml += "<class>\n"
-#           @nest << "class"
-#         elsif @current_token == 'function'
-#           @xml += "<subroutineDec>\n"
-#           @nest << "subroutineDec"
-#           @state = :subroutine
-#         elsif @current_token == ")"
-#           @xml += "</parameterList>\n"
-#         end
-
-#         if @current_token == "{" && @state == :subroutine
-#           @xml += "<subroutineBody>\n"
-#         end
-
-        type = token_type.downcase
-        case type
-        when 'keyword'
-          type = 'keyword'
-          out = key_word
-        when 'symbol'
-          type = 'symbol'
-          out = symbol
-        when 'identifier'
-          type = 'identifier'
-          out = identifier
-        when 'int_const'
-          type = 'integerConstant'
-          out = int_val
-        when 'string_const'
-          type = 'stringConstant'
-          out = string_val
-        end
-
-
-        @xml += "<#{type}> #{out} </#{type}>\n"
-
-#         if @current_token == "("
-#           @xml += "<parameterList>\n"
-#         elsif @current_token == '}'
-#           @xml += "</#{@nest.pop}>\n"
-#         end
-
-        advance
-
-      end
-
-
-    end
