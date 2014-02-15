@@ -8,7 +8,7 @@ require_relative 'compilationengine.rb'
 
 
 if ARGV[0].nil?
-  arg = "hello world"
+  arg = "helloworld"
 else
   arg = ARGV[0]
 end
@@ -19,19 +19,15 @@ input = JackTokenizer.new()
 
 
 input.xml_tokenize
-puts input.xml
-
+system("clear")
 
 name = arg.sub(/.jack/, '') + '.xml'
 output = File.open(name, 'w')
+output << input.xml
+
 
 # will accept name of directory instead later on
-
-
-
 
 # output = File.open(name, 'w')
 # output.puts(Parser.new(ARGV[0]).export_compiled)
 # output.close
-
-

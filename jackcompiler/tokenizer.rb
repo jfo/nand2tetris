@@ -10,6 +10,10 @@ class JackTokenizer
                 method
                 field
                 static
+                var
+                int
+                char
+                boolean
                 void
                 true
                 false
@@ -25,10 +29,12 @@ class JackTokenizer
   def initialize(filename = '/Users/jeff/code/nand2tetris/projects/10/ArrayTest/Main.jack')
     # opens the input file and gets ready to tokenize it
 
+    @nest = []
     @xml = ''
     @lines = clean_lines(File.open(filename, 'r').read)
     @tokens = tokenize(@lines)
-    @current_token = ""
+    advance
+
   end
 
   def has_more_tokens?
@@ -124,28 +130,57 @@ class JackTokenizer
 
 
     def xml_tokenize
+
       while has_more_tokens?
-        type = token_type
 
-        case type.downcase
+#         if @current_token == 'class'
+#           @xml += "<class>\n"
+#           @nest << "class"
+#         elsif @current_token == 'function'
+#           @xml += "<subroutineDec>\n"
+#           @nest << "subroutineDec"
+#           @state = :subroutine
+#         elsif @current_token == ")"
+#           @xml += "</parameterList>\n"
+#         end
 
+#         if @current_token == "{" && @state == :subroutine
+#           @xml += "<subroutineBody>\n"
+#         end
+
+        type = token_type.downcase
+        case type
         when 'keyword'
-          tag = key_word
+          type = 'keyword'
+          out = key_word
         when 'symbol'
-          tag = symbol
+          type = 'symbol'
+          out = symbol
         when 'identifier'
-          tag = identifier
+          type = 'identifier'
+          out = identifier
         when 'int_const'
-          tag = int_val
+          type = 'integerConstant'
+          out = int_val
         when 'string_const'
-          tag = string_val
+          type = 'stringConstant'
+          out = string_val
         end
 
-        @xml += "<#{tag}> #{@current_token} </#{tag}>\n"
+
+        @xml += "<#{type}> #{out} </#{type}>\n"
+
+#         if @current_token == "("
+#           @xml += "<parameterList>\n"
+#         elsif @current_token == '}'
+#           @xml += "</#{@nest.pop}>\n"
+#         end
 
         advance
 
       end
+
+
     end
 
 end
