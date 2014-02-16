@@ -1,31 +1,32 @@
 #!/usr/bin/env ruby
-
 require 'pry'
 require_relative 'tokenizer.rb'
 require_relative 'compilationengine.rb'
 
-# raise 'No file specified' if ARGV.length == 0
+ARGV[0] = '/Users/jeff/code/nand2tetris/projects/10/ArrayTest/Main.jack'
 
 
-if ARGV[0].nil?
-  arg = "MainT"
+
+if ARGV[0][-1] == '/'
+  files = Dir.entries(ARGV[0]).select { |e| e.include?('.jack') }
+elsif ARGV[0][-5..-1].include?('jack')
+  files =[ARGV[0]]
 else
-  arg = ARGV[0]
+  raise 'nope'
 end
 
 
 
-tokens = JackTokenizer.new('/Users/jeff/code/nand2tetris/projects/10/ArrayTest/Main.jack')
-# engine = CompilationEngine.new(tokens.output)
-# input.xml_tokenize
+name = ARGV[0].sub(/.jack/, '') + '.xml'
+name = '/Users/jeff/code/nand2tetris/jackcompiler/MainT.xml'
 
-name = arg.sub(/.jack/, '') + '.xml'
+tokens = JackTokenizer.new(ARGV[0])
+tokens.xml_ize
+compiled = CompilationEngine.new(JackTokenizer.new(ARGV[0]))
+
+# engine = CompilationEngine.new(tokens.output)
+
 File.open(name, 'w') { |file| file.write(tokens.output) }
 
-# binding.pry
 
-# will accept name of directory instead later on
-
-# output = File.open(name, 'w')
-# output.puts(Parser.new(ARGV[0]).export_compiled)
-# output.close
+binding.pry

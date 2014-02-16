@@ -135,7 +135,7 @@ class JackTokenizer
     end
 
     def xml_ize
-      @output += "<tokens>\n"
+      # @output += "<tokens>\n"
 
       until @current_token ==  :done
         type = token_type.downcase
@@ -162,7 +162,7 @@ class JackTokenizer
         @output += "<#{type}> #{out} </#{type}>\n"
         advance
       end
-        @output += "</tokens>\n"
+        # @output += "</tokens>\n"
     end
 
     def symbolize(symbol)
