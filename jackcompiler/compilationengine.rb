@@ -1,30 +1,82 @@
 class CompilationEngine
 
-  attr_reader :input, :output
+  attr_reader :input, :output, :nest_stack
 
   def initialize(input)
     #creates a new compilation engine with the given input and output. The next routine to be called must be compile_class()
     @input = input
     @output = ''
+    @nest_stack = []
 
-    @symbol_switch = {}
+    @input.advance
   end
 
+  def compile
+
+    case @input.current_token
+    when "class"
+      compile_class
+    when "var"
+      compile_class_var_dec
+    when "function"
+      compile_subroutine
+    when "("
+      compile_parameter_list
+    when "{"
+      @output += "<subroutineBody>"
+    else
+      @output += @input.xml_ize
+      @input.advance
+    end
+
+  end
 
   def compile_class
     # compiles a complete class
+    alltokens = @input.tokens
+    @nest_stack.push("class")
+    @output += "<class>\n"
+    @output += @input.xml_ize
+    @input.advance
+    compile until alltokens.empty?
+    compile
+    @output += "</#{@nest_stack.pop}>\n"
   end
 
   def compile_class_var_dec
     # compiles a static declaration
+    @nest_stack.push("varDec")
+    @output += "<varDec>\n"
+    @output += @input.xml_ize
+    @input.advance
+    compile until input.current_token == ";"
+    compile
+    @output += "</#{@nest_stack.pop}>\n"
   end
 
   def compile_subroutine
     # compiles a complete method, function, or constructor
+    @nest_stack.push("subroutineDec")
+    @output += "<subroutineDec>\n"
+    @output += @input.xml_ize
+    @input.advance
+    compile until input.current_token == ";"
+    compile
+    @output += "</subroutineBody>\n"
+    @output += "</#{@nest_stack.pop}>\n"
   end
 
   def compile_parameter_list
     # compiles a (possibly empty) parameter list, not including the enclosing ()
+    #
+    @nest_stack.push("parameterList")
+    @output += @input.xml_ize
+    @output += "<parameterList>\n"
+    @input.advance
+    compile until input.current_token == ")"
+    @output += "</#{@nest_stack.pop}>\n"
+    compile
+
   end
 
 

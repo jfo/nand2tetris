@@ -28,9 +28,7 @@ class JackTokenizer
     # opens the input file and gets ready to tokenize it
     @tokens = tokenize(clean_lines(File.open(filename, 'r').read))
     @current_token = nil
-    advance
     @output = ''
-    xml_ize
   end
 
   def has_more_tokens?
@@ -41,7 +39,7 @@ class JackTokenizer
     if has_more_tokens?
       @current_token = @tokens.shift
     else
-      @current_token = :done
+      # @current_token = :done
     end
   end
 
@@ -137,7 +135,7 @@ class JackTokenizer
     def xml_ize
       # @output += "<tokens>\n"
 
-      until @current_token ==  :done
+      # until @current_token ==  :done
         type = token_type.downcase
         case type
         when 'keyword'
@@ -159,9 +157,9 @@ class JackTokenizer
 
         out = symbolize(out)
 
-        @output += "<#{type}> #{out} </#{type}>\n"
-        advance
-      end
+        return "<#{type}> #{out} </#{type}>\n"
+        # advance
+      # end
         # @output += "</tokens>\n"
     end
 
