@@ -36,11 +36,7 @@ class JackTokenizer
   end
 
   def advance
-    if has_more_tokens?
-      @current_token = @tokens.shift
-    else
-      # @current_token = :done
-    end
+    @current_token = @tokens.shift if has_more_tokens?
   end
 
   def token_type
