@@ -16,11 +16,7 @@ end
 # name = ARGV[0].sub(/.jack/, '') + '.xml'
 name = '/Users/jeff/code/nand2tetris/jackcompiler/MainT.xml'
 
-compiled = CompilationEngine.new(JackTokenizer.new(ARGV[0]))
-until !compiled.input.has_more_tokens? do
-  compiled.compile
-end
-  compiled.compile
+ compiled = CompilationEngine.new(JackTokenizer.new(ARGV[0]))
 
 File.open(name, 'w') { |file| file.write(compiled.output) }
 
