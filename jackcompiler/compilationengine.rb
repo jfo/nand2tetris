@@ -8,14 +8,14 @@ class CompilationEngine
     #creates a new compilation engine with the given input and output. The next routine to be called must be compile_class()
     @input = input
     @output = ''
-    @input.advance
-    compile_class
+    @input.advance if @input.current_token != 'class'
+    # compile_class
   end
 
   def compile
     case @input.current_token
     when 'static', 'field'
-      class_var_dec
+      compile_class_var_dec
     when 'int', 'char', 'boolean'
       @output += @input.xml_ize
       @input.advance
@@ -31,7 +31,6 @@ class CompilationEngine
       @output += @input.xml_ize
       @input.advance
     end
-
   end
 
   def compile_class
@@ -45,14 +44,17 @@ class CompilationEngine
   def compile_class_var_dec
     # compiles a static declaration
     @output += "<classVarDec>\n"
-    compile until current_token == ';'
+      @output += @input.xml_ize
+      @input.advance
+    compile until input.current_token == ';'
     compile
     @output += "</classVarDec>\n"
+
   end
 
   def compile_subroutine
     # compiles a complete method, function, or constructor
-    #
+
     @output += "<subroutineDec>\n"
     @output += @input.xml_ize
     @input.advance
@@ -130,7 +132,8 @@ class CompilationEngine
     compile until @input.current_token == '('
     compile_expression_list
     compile until @input.current_token == ';'
-    compile
+      @output += @input.xml_ize
+      @input.advance
     @output += "</doStatement>\n"
   end
 
@@ -238,6 +241,9 @@ class CompilationEngine
     @output += "</expressionList>\n"
     @output += @input.xml_ize
     @input.advance
+
+    # i think this might need to go
+    # compile
 
   end
 
