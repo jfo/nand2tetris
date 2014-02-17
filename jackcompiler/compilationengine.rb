@@ -6,57 +6,83 @@ class CompilationEngine
     #creates a new compilation engine with the given input and output. The next routine to be called must be compile_class()
     @input = input
     @output = ''
-    @nest_stack = []
     @input.advance
+
+    @nest_stack = []
   end
 
   def compile
+
     case @input.token_type
     when "SYMBOL"
-      @output += @input.token_type
+     if @input.current_token == '('
+       compile_parameter_list
+     elsif input.current_token == '}' || input.current_token == ')'
+       @output += "</#{@nest_stack.pop}>\n"
+     else
+       @output += @input.xml_ize
+     end
+
     when "KEYWORD"
       compile_class if @input.current_token == 'class'
+      compile_class_var_dec if @input.current_token == 'var'
+      compile_subroutine if @input.current_token == 'function'
+      @output += @input.xml_ize if @input.current_token == 'void'
+      @output += @input.xml_ize if @input.current_token == 'length'
+      @output += @input.xml_ize if @input.current_token == 'static'
+      @output += @input.xml_ize if @input.current_token == 'int'
     else
-      # @output += @input.xml_ize
-      # @input.advance
+       @output += @input.xml_ize
     end
 
-      @output += @input.xml_ize
-      @input.advance
+     @input.advance
+
   end
 
   def compile_class
     # compiles a complete class
-
-    tokens = []
-    tokens <<
-
+    #
+    starting_depth = @nest_stack.length
     @nest_stack.push("class")
     @output += "<class>\n"
     @output += @input.xml_ize
     @input.advance
-    @output += "</#{@nest_stack.pop}>\n"
+    compile until @nest_stack.length == starting_depth
 
   end
 
   def compile_class_var_dec
     # compiles a static declaration
+    @nest_stack.push("varDec")
+    @output += "<varDec>\n"
+    @output += @input.xml_ize
+    @input.advance
+    compile until input.current_token == ";"
+    @output += @input.xml_ize
+    @output += "</#{@nest_stack.pop}>\n"
   end
 
   def compile_subroutine
     # compiles a complete method, function, or constructor
+    starting_depth = @nest_stack.length
+    @nest_stack.push("subroutineDec")
+    @output += "<subroutineDec>\n"
+    @output += @input.xml_ize
+    @input.advance
+    compile until @nest_stack.length == starting_depth
   end
 
   def compile_parameter_list
     # compiles a (possibly empty) parameter list, not including the enclosing ()
 
-    @nest_stack.push("parameterlist")
+    @nest_stack.push("paramterList")
     @output += @input.xml_ize
-    @output += "<parameterlist>\n"
+    @output += "<parameterList>\n"
     @input.advance
     compile until input.current_token == ")"
     @output += "</#{@nest_stack.pop}>\n"
-    compile
+    @output += @input.xml_ize
+
 
   end
 

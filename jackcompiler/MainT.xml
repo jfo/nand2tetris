@@ -1,0 +1,151 @@
+<class>
+<keyword> class </keyword>
+<identifier> Main </identifier>
+<symbol> { </symbol>
+<subroutineDec>
+<keyword> function </keyword>
+<keyword> void </keyword>
+<identifier> main </identifier>
+<symbol> ( </symbol>
+<parameterList>
+</paramterList>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<varDec>
+<keyword> var </keyword>
+<identifier> Array </identifier>
+<identifier> a </identifier>
+<symbol> ; </symbol>
+</varDec>
+<varDec>
+<keyword> var </keyword>
+<keyword> int </keyword>
+<identifier> length </identifier>
+<symbol> ; </symbol>
+</varDec>
+<varDec>
+<keyword> var </keyword>
+<keyword> int </keyword>
+<identifier> i </identifier>
+<symbol> , </symbol>
+<identifier> sum </identifier>
+<symbol> ; </symbol>
+</varDec>
+<identifier> length </identifier>
+<symbol> = </symbol>
+<identifier> Keyboard </identifier>
+<symbol> . </symbol>
+<identifier> readInt </identifier>
+<symbol> ( </symbol>
+<parameterList>
+<stringConstant> HOW MANY NUMBERS? </stringConstant>
+</paramterList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+<identifier> a </identifier>
+<symbol> = </symbol>
+<identifier> Array </identifier>
+<symbol> . </symbol>
+<identifier> new </identifier>
+<symbol> ( </symbol>
+<parameterList>
+<identifier> length </identifier>
+</paramterList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+<identifier> i </identifier>
+<symbol> = </symbol>
+<integerConstant> 0 </integerConstant>
+<symbol> ; </symbol>
+<symbol> ( </symbol>
+<parameterList>
+<identifier> i </identifier>
+<symbol> &lt; </symbol>
+<identifier> length </identifier>
+</paramterList>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<identifier> a </identifier>
+<symbol> [ </symbol>
+<identifier> i </identifier>
+<symbol> ] </symbol>
+<symbol> = </symbol>
+<identifier> Keyboard </identifier>
+<symbol> . </symbol>
+<identifier> readInt </identifier>
+<symbol> ( </symbol>
+<parameterList>
+<stringConstant> ENTER THE NEXT NUMBER: </stringConstant>
+</paramterList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+<identifier> i </identifier>
+<symbol> = </symbol>
+<identifier> i </identifier>
+<symbol> + </symbol>
+<integerConstant> 1 </integerConstant>
+<symbol> ; </symbol>
+</subroutineDec>
+<identifier> i </identifier>
+<symbol> = </symbol>
+<integerConstant> 0 </integerConstant>
+<symbol> ; </symbol>
+<identifier> sum </identifier>
+<symbol> = </symbol>
+<integerConstant> 0 </integerConstant>
+<symbol> ; </symbol>
+<symbol> ( </symbol>
+<parameterList>
+<identifier> i </identifier>
+<symbol> &lt; </symbol>
+<identifier> length </identifier>
+</paramterList>
+<symbol> ) </symbol>
+<symbol> { </symbol>
+<identifier> sum </identifier>
+<symbol> = </symbol>
+<identifier> sum </identifier>
+<symbol> + </symbol>
+<identifier> a </identifier>
+<symbol> [ </symbol>
+<identifier> i </identifier>
+<symbol> ] </symbol>
+<symbol> ; </symbol>
+<identifier> i </identifier>
+<symbol> = </symbol>
+<identifier> i </identifier>
+<symbol> + </symbol>
+<integerConstant> 1 </integerConstant>
+<symbol> ; </symbol>
+</class>
+<identifier> Output </identifier>
+<symbol> . </symbol>
+<identifier> printString </identifier>
+<symbol> ( </symbol>
+<parameterList>
+<stringConstant> THE AVERAGE IS: </stringConstant>
+</paramterList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+<identifier> Output </identifier>
+<symbol> . </symbol>
+<identifier> printInt </identifier>
+<symbol> ( </symbol>
+<parameterList>
+<identifier> sum </identifier>
+<symbol> / </symbol>
+<identifier> length </identifier>
+</paramterList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+<identifier> Output </identifier>
+<symbol> . </symbol>
+<identifier> println </identifier>
+<symbol> ( </symbol>
+<parameterList>
+</paramterList>
+<symbol> ) </symbol>
+<symbol> ; </symbol>
+<symbol> ; </symbol>
+</>
+</>
