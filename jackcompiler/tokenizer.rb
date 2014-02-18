@@ -28,6 +28,7 @@ class JackTokenizer
   def initialize(filename)
     # opens the input file and gets ready to tokenize it
     @tokens = tokenize(clean_lines(File.open(filename, 'r').read))
+    @tokens << 'DERP'
     @current_token = nil
     @output = ''
   end
@@ -84,6 +85,7 @@ class JackTokenizer
 
 
     def clean_lines(input)
+
       tokens = input.sub(/\/\*.*\*\//, '').split("\n")
 
       tokens.collect! do |e|
@@ -95,7 +97,6 @@ class JackTokenizer
       tokens.reject! { |c| c.empty? }
 
       return tokens
-      binding.pry
     end
 
 
@@ -161,8 +162,12 @@ class JackTokenizer
 
         out = symbolize(out)
 
+        # puts "<#{type}> #{out} </#{type}>\n"
+        # sleep 0.01
+
+        advance if !has_more_tokens?
         return "<#{type}> #{out} </#{type}>\n"
-        # advance
+        # dvance
       # end
         # @output += "</tokens>\n"
     end
@@ -172,6 +177,4 @@ class JackTokenizer
       symbol = switch[symbol] if switch.keys.include?(symbol)
       symbol
     end
-
 end
-

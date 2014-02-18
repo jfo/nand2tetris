@@ -1,5 +1,4 @@
 class CompilationEngine
-
   attr_reader :input, :output, :nest_stack
 
   @@ops = '+ - * / & | < > ='.split
@@ -13,6 +12,7 @@ class CompilationEngine
   end
 
   def compile
+
     case @input.current_token
     when 'static', 'field'
       compile_class_var_dec
@@ -23,10 +23,12 @@ class CompilationEngine
       @input.advance
     when 'constructor', 'function', 'method'
       compile_subroutine
-    when "("
-      compile_parameter_list
+    # when "("
+    #   compile_parameter_list
     when 'var'
       compile_var_dec
+    when 'DERP'
+      binding.pry
     else
       @output += @input.xml_ize
       @input.advance
@@ -56,9 +58,16 @@ class CompilationEngine
     # compiles a complete method, function, or constructor
 
     @output += "<subroutineDec>\n"
+
     @output += @input.xml_ize
     @input.advance
-    compile until input.current_token == '{'
+
+    compile
+    compile
+
+    compile_parameter_list
+    compile
+
     @output += "<subroutineBody>\n"
     @output += @input.xml_ize
     @input.advance
@@ -77,14 +86,13 @@ class CompilationEngine
 
   def compile_parameter_list
     # compiles a (possibly empty) parameter list, not including the enclosing ()
+
     @output += @input.xml_ize
     @input.advance
 
     @output += "<parameterList>\n"
     compile until input.current_token == ')'
     @output += "</parameterList>\n"
-    @output += @input.xml_ize
-    @input.advance
 
   end
 
@@ -188,6 +196,18 @@ class CompilationEngine
     # compiles an if statement, possibly with a trailing else clause
     @output += "<ifStatement>\n"
     compile
+    compile
+
+    compile_expression
+
+    compile
+
+    compile
+    @output += "<statements>\n"
+    compile_statements until @input.current_token == '}'
+    @output += "</statements>\n"
+    compile
+    @output += "</ifStatement>\n"
   end
 
 
@@ -221,8 +241,11 @@ class CompilationEngine
       compile
     elsif @input.current_token == '('
       compile
-      compile_expression_list
+      compile_expression
       compile
+    elsif @input.current_token == '~'
+      compile
+      compile_term
     else
       compile
     end
@@ -246,6 +269,4 @@ class CompilationEngine
     # compile
 
   end
-
-
 end
