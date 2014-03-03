@@ -28,7 +28,7 @@ class CompilationEngine
     when 'var'
       compile_var_dec
     when 'DERP'
-      binding.pry
+      puts "yay!"
     else
       @output += @input.xml_ize
       @input.advance

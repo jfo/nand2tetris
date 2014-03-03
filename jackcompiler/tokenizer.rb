@@ -1,5 +1,4 @@
 class JackTokenizer
-
   attr_accessor :current_token, :tokens, :output
 
   @@symbols = '{}[]().,;+-*/&|<>=~'.split(//)
@@ -86,17 +85,18 @@ class JackTokenizer
 
     def clean_lines(input)
 
-      tokens = input.sub(/\/\*.*\*\//, '').split("\n")
+      lines = input.split("\n")
 
-      tokens.collect! do |e|
+
+      lines.collect! do |e|
         e.sub(/\/\/.*$/, '').sub("\r", '').sub(/^\s*/, '')
       end
 
-      tokens.reject! { |c| c.include?('/*') }
-      tokens.reject! { |c| c[0] == '*' }
-      tokens.reject! { |c| c.empty? }
+      lines.reject! { |c| c.include?('/*') }
+      lines.reject! { |c| c[0] == '*' }
+      lines.reject! { |c| c.empty? }
 
-      return tokens
+      return lines
     end
 
 
@@ -119,6 +119,8 @@ class JackTokenizer
       lines.map! { |line| line.split }
       lines.flatten!
 
+
+      binding.pry
       lines.collect!.with_index do |token, index|
         if token[0] == '"'
           out = ''

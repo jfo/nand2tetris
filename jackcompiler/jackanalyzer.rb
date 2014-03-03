@@ -3,7 +3,9 @@ require 'pry'
 require_relative 'tokenizer.rb'
 require_relative 'compilationengine.rb'
 
+ARGV[0] = "/Users/jeff/code/nand2tetris/jackcompiler/Square/Square.jack"
 raise 'No input files specified' if ARGV.empty?
+
 
 if ARGV[0][-1] == '/'
   files = Dir.entries(ARGV[0]).select { |e| e.include?('.jack') }
@@ -27,4 +29,6 @@ files.each do |file|
 end
 
 File.open(name, 'w') { |file| file.write(compiled) }
+
+
 
