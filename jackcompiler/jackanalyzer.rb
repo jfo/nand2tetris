@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'pry'
 require_relative 'tokenizer.rb'
+require_relative 'symboltable.rb'
 require_relative 'compilationengine.rb'
 
 ARGV[0] = "/Users/jeff/code/nand2tetris/jackcompiler/Square/Square.jack"
@@ -22,10 +23,9 @@ name = '/Users/jeff/code/nand2tetris/jackcompiler/output.xml'
 compiled = ''
 
 files.each do |file|
-  x = CompilationEngine.new(JackTokenizer.new(file))
+  x = CompilationEngine.new(JackTokenizer.new(file), SymbolTable.new)
   x.compile_class
   compiled += x.output
-
 end
 
 File.open(name, 'w') { |file| file.write(compiled) }

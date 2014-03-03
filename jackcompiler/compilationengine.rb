@@ -1,13 +1,22 @@
+require 'pry'
 class CompilationEngine
   attr_reader :input, :output, :nest_stack
 
   @@ops = '+ - * / & | < > ='.split
 
-  def initialize(input)
+  def initialize(input, symbol_table)
     #creates a new compilation engine with the given input and output. The next routine to be called must be compile_class()
     @input = input
+
+    @symbol_table = symbol_table
+
+    @vmoutput = []
     @output = ''
     @input.advance if @input.current_token != 'class'
+
+    @class_name = @input.tokens[0]
+
+    binding.pry
     # compile_class
   end
 
@@ -46,6 +55,7 @@ class CompilationEngine
   def compile_class_var_dec
     # compiles a static declaration
     @output += "<classVarDec>\n"
+    @vmoutput <<
       @output += @input.xml_ize
       @input.advance
     compile until input.current_token == ';'
@@ -264,9 +274,6 @@ class CompilationEngine
     @output += "</expressionList>\n"
     @output += @input.xml_ize
     @input.advance
-
-    # i think this might need to go
-    # compile
 
   end
 end
